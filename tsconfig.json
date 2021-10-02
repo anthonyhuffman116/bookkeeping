@@ -6,12 +6,14 @@
     "outDir": "build",
     "rootDir": "./",
     "sourceMap": true,
+    "jsx": "react",
     "paths": {
       "App/*": ["./app/*"],
       "Config/*": ["./config/*"],
       "Contracts/*": ["./contracts/*"],
-      "Database/*": ["./database/*"]
+      "Database/*": ["./database/*"],
     },
+    "lib": ["DOM"],
     "types": [
       "@adonisjs/core",
       "@adonisjs/repl",

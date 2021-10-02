@@ -9,14 +9,13 @@ const mix = require('laravel-mix')
 mix.setPublicPath('public')
 
 // Add your assets here
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const webpack = require('webpack')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 mix
   .setPublicPath('public')
-  .js('resources/client/index.js', 'public/js/')
+  .ts('resources/client/index.tsx', 'public/js/')
   .react()
   .sass('resources/assets/scss/index.scss', 'public/css/')
   .options({
@@ -42,7 +41,6 @@ mix.webpackConfig({
             loader: require.resolve('babel-loader'),
             options: {
               presets: ['@babel/preset-react'],
-              plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
             },
           },
         ],
@@ -51,7 +49,6 @@ mix.webpackConfig({
   },
   plugins: [
     isDevelopment && new webpack.HotModuleReplacementPlugin(),
-    isDevelopment && new ReactRefreshWebpackPlugin(),
     new webpack.ProvidePlugin({
       React: 'react',
     }),
