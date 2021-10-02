@@ -11,7 +11,7 @@
       "App/*": ["./app/*"],
       "Config/*": ["./config/*"],
       "Contracts/*": ["./contracts/*"],
-      "Database/*": ["./database/*"],
+      "Database/*": ["./database/*"]
     },
     "lib": ["DOM"],
     "types": [
@@ -19,7 +19,8 @@
       "@adonisjs/repl",
       "@adonisjs/session",
       "@adonisjs/view",
-      "@adonisjs/shield"
+      "@adonisjs/shield",
+      "@adonisjs/lucid"
     ]
   }
 }
