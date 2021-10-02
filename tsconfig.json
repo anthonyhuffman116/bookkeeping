@@ -21,6 +21,7 @@
       "@adonisjs/view",
       "@adonisjs/shield",
       "@adonisjs/lucid"
-    ]
+    ],
+    "typeRoots": ["resources/types"]
   }
 }

@@ -6,5 +6,4 @@ This is my bookkeeping application.
 
 ```
 npm run dev
-npm run client
 ```

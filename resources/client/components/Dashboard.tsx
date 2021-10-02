@@ -1,13 +1,6 @@
-import { styled } from '@mui/material/styles'
-import { Grid, Paper } from '@mui/material'
-import React from 'react'
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
+import { Grid } from '@mui/material';
+import React from 'react';
+import PaymentsList from './PaymentsList';
 
 export default function Dashboard() {
   return (
@@ -16,12 +9,12 @@ export default function Dashboard() {
 
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <Item>A</Item>
+          <PaymentsList />
         </Grid>
         <Grid item xs={6}>
-          <Item>B</Item>
+          B
         </Grid>
       </Grid>
     </div>
-  )
+  );
 }

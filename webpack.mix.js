@@ -1,4 +1,5 @@
-const mix = require('laravel-mix')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const mix = require('laravel-mix');
 
 /**
  * By default, AdonisJS public path for static assets is on the `./public` directory.
@@ -6,12 +7,12 @@ const mix = require('laravel-mix')
  * If you want to change Laravel Mix public path, change the AdonisJS public path config first!
  * See: https://docs.adonisjs.com/guides/static-assets#the-default-directory
  */
-mix.setPublicPath('public')
+mix.setPublicPath('public');
 
 // Add your assets here
-const webpack = require('webpack')
+const webpack = require('webpack');
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 mix
   .setPublicPath('public')
@@ -20,10 +21,12 @@ mix
   .sass('resources/assets/scss/index.scss', 'public/css/')
   .options({
     processCssUrls: false,
-  })
+  });
+
 if (isDevelopment) {
-  mix.sourceMaps()
+  mix.sourceMaps();
 }
+
 mix.webpackConfig({
   mode: isDevelopment ? 'development' : 'production',
   context: __dirname,
@@ -40,7 +43,21 @@ mix.webpackConfig({
           {
             loader: require.resolve('babel-loader'),
             options: {
-              presets: ['@babel/preset-react'],
+              presets: [
+                '@babel/preset-react',
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: {
+                      esmodules: true,
+                    },
+                  },
+                ],
+              ],
+              plugins: [
+                isDevelopment && require.resolve('react-refresh/babel'),
+                '@babel/transform-runtime',
+              ].filter(Boolean),
             },
           },
         ],
@@ -49,8 +66,12 @@ mix.webpackConfig({
   },
   plugins: [
     isDevelopment && new webpack.HotModuleReplacementPlugin(),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
     new webpack.ProvidePlugin({
       React: 'react',
     }),
   ].filter(Boolean),
-})
+  optimization: {
+    emitOnErrors: true,
+  },
+});
