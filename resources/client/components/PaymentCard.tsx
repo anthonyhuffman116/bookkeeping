@@ -5,6 +5,8 @@ import Amount from './Amount';
 
 type PaymentCardProps = {
   payment: Payment;
+  onSetupRegular: (payment: Payment) => void;
+  onAck: (payment: Payment) => void;
 };
 
 export default function PaymentCard(props: PaymentCardProps) {
@@ -15,6 +17,10 @@ export default function PaymentCard(props: PaymentCardProps) {
   ];
 
   const additional = additionalInformation.filter((x) => x != '');
+
+  const handleSetupRegular = () => {
+    props.onSetupRegular(props.payment);
+  };
 
   return (
     <Card>
@@ -29,8 +35,12 @@ export default function PaymentCard(props: PaymentCardProps) {
         <Amount amount={props.payment.amount / 100} />
       </CardContent>
       <CardActions>
-        <Button size="small">ACK</Button>
-        <Button size="small">Setup Interval</Button>
+        <Button size="small" onClick={() => props.onAck(props.payment)}>
+          ACK
+        </Button>
+        <Button size="small" onClick={handleSetupRegular}>
+          Setup regular
+        </Button>
       </CardActions>
     </Card>
   );

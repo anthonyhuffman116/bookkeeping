@@ -18,14 +18,12 @@
 |
 */
 
-import Route from '@ioc:Adonis/Core/Route'
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
+import Route from '@ioc:Adonis/Core/Route';
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
-Route.get('transactions', async () => {
-  return Database.from('transactions').select('*').where('ack', false).orderBy('bookingDate', 'asc')
-})
+import './routes/transaction';
+import './routes/regular';
 
 Route.get('*', async ({ view }: HttpContextContract) => {
-  return view.render('index')
-}).as('not_found')
+  return view.render('index');
+}).as('not_found');
