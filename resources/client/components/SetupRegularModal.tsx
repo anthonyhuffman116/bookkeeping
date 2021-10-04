@@ -24,20 +24,20 @@ const buildDueDate = (date: Date): Date => {
 type SetupRegularModalProps = {
   onClose: () => void;
   onSubmit: (regular: Regular) => void;
-  payment: null | Payment;
+  incomingPayment: null | IncomingPayment;
 };
 
 export default function SetupRegularModal(props: SetupRegularModalProps) {
-  const [summary, setSummary] = useState<undefined | string>(props.payment?.summary);
+  const [summary, setSummary] = useState<undefined | string>(props.incomingPayment?.summary);
   const [every, setEvery] = useState<number>(1);
   const [amount, setAmount] = useState<number>(10);
   const [dueDate, setDueDate] = useState<Date>(new Date());
 
   useEffect(() => {
-    setSummary(props.payment?.summary);
-    setAmount(props.payment?.amount ?? 0);
-    setDueDate(buildDueDate(props.payment?.bookingDate ?? new Date()));
-  }, [props.payment]);
+    setSummary(props.incomingPayment?.summary);
+    setAmount(props.incomingPayment?.amount ?? 0);
+    setDueDate(buildDueDate(props.incomingPayment?.bookingDate ?? new Date()));
+  }, [props.incomingPayment]);
 
   const handleClose = () => {
     props.onClose();
@@ -55,7 +55,7 @@ export default function SetupRegularModal(props: SetupRegularModalProps) {
   };
 
   return (
-    <StyledModal open={props.payment != null} onClose={handleClose}>
+    <StyledModal open={props.incomingPayment != null} onClose={handleClose}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
         Setup regular payment
       </Typography>

@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { CircularProgress, Stack, Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PaymentCard from './PaymentCard';
 import SetupIntervalModal from './SetupRegularModal';
@@ -26,8 +26,8 @@ const applyRegular = (regular: Regular) => {
   });
 };
 
-const ackPayment = (payment: Payment) => {
-  return fetch('/transactions/' + payment.id + '/ack', { method: 'POST' });
+const applyIncomingPayment = (incomingPayment: IncomingPayment) => {
+  return fetch('/transactions/' + incomingPayment.id + '/ack', { method: 'POST' });
 };
 
 type PaymentsListProps = {
@@ -35,56 +35,67 @@ type PaymentsListProps = {
 };
 
 export default function PaymentsList(props: PaymentsListProps) {
-  const [_, setIsFetching] = useState<Boolean>(true);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [paymentToSetupRegular, setPaymentToSetupRegular] = useState<null | Payment>(null);
+  const [isFetching, setIsFetching] = useState<Boolean>(true);
+  const [incomingPayments, setIncomingPayments] = useState<IncomingPayment[]>([]);
+  const [incomingPaymentToSetupRegular, setIncomingPaymentToSetupRegular] =
+    useState<null | IncomingPayment>(null);
 
   useEffect(() => {
     setIsFetching(true);
     loadTransactions().then((data) => {
-      setPayments(data);
+      setIncomingPayments(data);
       setIsFetching(false);
     });
   }, []);
 
-  const handleAck = (payment: Payment): void => {
-    ackPayment(payment).then(() => {
-      setPayments(payments.filter((p) => p.id != payment.id));
+  const handleApply = (payment: IncomingPayment): void => {
+    applyIncomingPayment(payment).then(() => {
+      setIncomingPayments(incomingPayments.filter((p) => p.id != payment.id));
     });
   };
 
-  const handleSetupRegular = (payment: Payment): void => {
-    setPaymentToSetupRegular(payment);
+  const handleSetupRegular = (payment: IncomingPayment): void => {
+    setIncomingPaymentToSetupRegular(payment);
   };
 
   const handleCloseSetupRegular = () => {
-    setPaymentToSetupRegular(null);
+    setIncomingPaymentToSetupRegular(null);
   };
 
   const handleSubmitSetupIntervalModal = (regular: Regular) => {
     applyRegular(regular).then(() => {
       props.onRegularCreated(regular);
-      setPaymentToSetupRegular(null);
+      setIncomingPaymentToSetupRegular(null);
     });
   };
 
-  return (
-    <>
-      <SetupIntervalModal
-        onSubmit={handleSubmitSetupIntervalModal}
-        onClose={handleCloseSetupRegular}
-        payment={paymentToSetupRegular}
-      />
-      <Stack spacing={1}>
-        {payments.map((payment: Payment) => (
-          <PaymentCard
-            payment={payment}
-            key={payment.id}
-            onAck={handleAck}
-            onSetupRegular={handleSetupRegular}
-          />
-        ))}
-      </Stack>
-    </>
+  let contents = (
+    <Container fixed>
+      <CircularProgress />
+    </Container>
   );
+
+  if (!isFetching) {
+    contents = (
+      <>
+        <SetupIntervalModal
+          onSubmit={handleSubmitSetupIntervalModal}
+          onClose={handleCloseSetupRegular}
+          incomingPayment={incomingPaymentToSetupRegular}
+        />
+        <Stack spacing={1}>
+          {incomingPayments.map((payment: IncomingPayment) => (
+            <PaymentCard
+              incomingPayment={payment}
+              key={payment.id}
+              onApply={handleApply}
+              onSetupRegular={handleSetupRegular}
+            />
+          ))}
+        </Stack>
+      </>
+    );
+  }
+
+  return contents;
 }

@@ -4,22 +4,22 @@ import { formatDate } from '../Utils';
 import Amount from './Amount';
 
 type PaymentCardProps = {
-  payment: Payment;
-  onSetupRegular: (payment: Payment) => void;
-  onAck: (payment: Payment) => void;
+  incomingPayment: IncomingPayment;
+  onSetupRegular: (payment: IncomingPayment) => void;
+  onApply: (payment: IncomingPayment) => void;
 };
 
 export default function PaymentCard(props: PaymentCardProps) {
   const additionalInformation = [
-    props.payment.name,
-    props.payment.account,
-    formatDate(props.payment.bookingDate),
+    props.incomingPayment.name,
+    props.incomingPayment.account,
+    formatDate(props.incomingPayment.bookingDate),
   ];
 
   const additional = additionalInformation.filter((x) => x != '');
 
   const handleSetupRegular = () => {
-    props.onSetupRegular(props.payment);
+    props.onSetupRegular(props.incomingPayment);
   };
 
   return (
@@ -29,14 +29,14 @@ export default function PaymentCard(props: PaymentCardProps) {
           {additional.join(' · ')}
         </Typography>
         <Typography variant="h6" component="div">
-          {props.payment.summary}
+          {props.incomingPayment.summary}
         </Typography>
 
-        <Amount amount={props.payment.amount / 100} />
+        <Amount amount={props.incomingPayment.amount / 100} />
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => props.onAck(props.payment)}>
-          ACK
+        <Button size="small" onClick={() => props.onApply(props.incomingPayment)}>
+          Apply
         </Button>
         <Button size="small" onClick={handleSetupRegular}>
           Setup regular
