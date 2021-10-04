@@ -5,6 +5,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -63,55 +64,57 @@ export default function SetupRegularModal(props: SetupRegularModalProps) {
         This will setup a regular payment that is due every {every} months.
       </Typography>
       <Box component="form">
-        <FormControl fullWidth>
-          <TextField
-            id="summary"
-            label="summary"
-            variant="outlined"
-            onChange={(e) => setSummary(e.target.value)}
-            defaultValue={summary}
-          />
-        </FormControl>
+        <Stack spacing={2}>
+          <FormControl fullWidth>
+            <TextField
+              id="summary"
+              label="summary"
+              variant="outlined"
+              onChange={(e) => setSummary(e.target.value)}
+              defaultValue={summary}
+            />
+          </FormControl>
 
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">interval</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={every}
-            label="Interval"
-            onChange={(e) => setEvery(parseInt(e.target.value.toString()))}
-          >
-            <MenuItem value={1}>monthly</MenuItem>
-            <MenuItem value={3}>quarterly</MenuItem>
-            <MenuItem value={12}>yearly</MenuItem>
-          </Select>
-        </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">interval</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={every}
+              label="Interval"
+              onChange={(e) => setEvery(parseInt(e.target.value.toString()))}
+            >
+              <MenuItem value={1}>monthly</MenuItem>
+              <MenuItem value={3}>quarterly</MenuItem>
+              <MenuItem value={12}>yearly</MenuItem>
+            </Select>
+          </FormControl>
 
-        <FormControl fullWidth>
-          <TextField
-            id="amount"
-            label="amount in cents"
-            variant="outlined"
-            type="number"
-            onChange={(e) => setAmount(parseInt(e.target.value))}
-            defaultValue={amount}
-          />
-        </FormControl>
+          <FormControl fullWidth>
+            <TextField
+              id="amount"
+              label="amount in cents"
+              variant="outlined"
+              type="number"
+              onChange={(e) => setAmount(parseInt(e.target.value))}
+              defaultValue={amount}
+            />
+          </FormControl>
 
-        <FormControl fullWidth>
-          <DatePicker
-            label="due date"
-            views={['year', 'month', 'day']}
-            openTo="month"
-            value={dueDate}
-            minDate={new Date('2010-01-01')}
-            onChange={(newValue) => {
-              setDueDate(newValue ?? new Date());
-            }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </FormControl>
+          <FormControl fullWidth>
+            <DatePicker
+              label="due date"
+              views={['year', 'month', 'day']}
+              openTo="month"
+              value={dueDate}
+              minDate={new Date('2010-01-01')}
+              onChange={(newValue) => {
+                setDueDate(newValue ?? new Date());
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </FormControl>
+        </Stack>
       </Box>
       <Button onClick={handleButtonSubmit}>Save</Button>
     </StyledModal>
