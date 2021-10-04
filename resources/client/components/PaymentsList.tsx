@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PaymentCard from './PaymentCard';
-import SetupIntervalModal from './SetupIntervalModal';
+import SetupIntervalModal from './SetupRegularModal';
 
 const mapToTransactions = (data: any) => {
   let x = data;
