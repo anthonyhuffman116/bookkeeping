@@ -2,6 +2,7 @@ import { Button, Card, CardActions, CardContent, Typography } from '@mui/materia
 import React from 'react';
 import { formatDate } from '../Utils';
 import Amount from './Amount';
+import ArrowRight from '@mui/icons-material/ArrowRight';
 
 type PaymentCardProps = {
   incomingPayment: IncomingPayment;
@@ -11,7 +12,7 @@ type PaymentCardProps = {
 
 export default function PaymentCard(props: PaymentCardProps) {
   const additionalInformation = [
-    props.incomingPayment.name,
+    props.incomingPayment.summary,
     props.incomingPayment.account,
     formatDate(props.incomingPayment.bookingDate),
   ];
@@ -33,7 +34,7 @@ export default function PaymentCard(props: PaymentCardProps) {
           orderId
         }
       >
-        Amazon
+        <ArrowRight /> Amazon
       </Button>
     );
   }
@@ -41,11 +42,11 @@ export default function PaymentCard(props: PaymentCardProps) {
   return (
     <Card>
       <CardContent>
-        <Typography sx={{ fontSize: 12 }} color="text.secondary" gutterBottom>
+        <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
           {additional.join(' · ')}
         </Typography>
         <Typography variant="h6" component="div">
-          {props.incomingPayment.summary}
+          {props.incomingPayment.name}
         </Typography>
 
         <Amount amount={props.incomingPayment.amount / 100} />
