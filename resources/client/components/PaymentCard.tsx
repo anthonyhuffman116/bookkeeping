@@ -5,7 +5,7 @@ import Amount from './Amount';
 
 type PaymentCardProps = {
   incomingPayment: IncomingPayment;
-  onSetupRegular: (payment: IncomingPayment) => void;
+  onSetupCategory: (payment: IncomingPayment) => void;
   onApply: (payment: IncomingPayment) => void;
 };
 
@@ -18,9 +18,25 @@ export default function PaymentCard(props: PaymentCardProps) {
 
   const additional = additionalInformation.filter((x) => x != '');
 
-  const handleSetupRegular = () => {
-    props.onSetupRegular(props.incomingPayment);
+  const handleSetupCategory = () => {
+    props.onSetupCategory(props.incomingPayment);
   };
+
+  let detailsLink = <></>;
+
+  if (props.incomingPayment.name.startsWith('AMAZON')) {
+    const orderId = props.incomingPayment.summary.split(' ')[0];
+    detailsLink = (
+      <Button
+        href={
+          'https://www.amazon.de/gp/your-account/order-details/ref=ppx_yo_dt_b_order_details_o00?ie=UTF8&orderID=' +
+          orderId
+        }
+      >
+        Amazon
+      </Button>
+    );
+  }
 
   return (
     <Card>
@@ -38,9 +54,10 @@ export default function PaymentCard(props: PaymentCardProps) {
         <Button size="small" onClick={() => props.onApply(props.incomingPayment)}>
           Apply
         </Button>
-        <Button size="small" onClick={handleSetupRegular}>
-          Setup regular
+        <Button size="small" onClick={handleSetupCategory}>
+          Setup category
         </Button>
+        {detailsLink}
       </CardActions>
     </Card>
   );

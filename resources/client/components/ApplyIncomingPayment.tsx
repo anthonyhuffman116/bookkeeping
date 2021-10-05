@@ -14,30 +14,24 @@ import StyledModal from './StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
 
-const buildDueDate = (date: Date): Date => {
-  const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  copy.setMonth(copy.getMonth() + 1);
-  copy.setDate(1);
-
-  return copy;
-};
-
-type SetupRegularModalProps = {
+type ApplyIncomingPaymentModalProps = {
   onClose: () => void;
-  onSubmit: (regular: Regular) => void;
+  onSubmit: (payment: Payment) => void;
+  categories: Category[];
   incomingPayment: null | IncomingPayment;
 };
 
-export default function SetupRegularModal(props: SetupRegularModalProps) {
+export default function ApplyIncomingPaymentModal(props: ApplyIncomingPaymentModalProps) {
   const [summary, setSummary] = useState<undefined | string>(props.incomingPayment?.summary);
-  const [every, setEvery] = useState<number>(1);
   const [amount, setAmount] = useState<number>(10);
-  const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [bookingDate, setBookingDate] = useState<Date>(new Date());
+  const [categoryId, setCategoryId] = useState<null | string>(null);
 
   useEffect(() => {
-    setSummary(props.incomingPayment?.summary);
+    setSummary(props.incomingPayment?.summary.substr(0, 100));
     setAmount(props.incomingPayment?.amount ?? 0);
-    setDueDate(buildDueDate(props.incomingPayment?.bookingDate ?? new Date()));
+    setBookingDate(props.incomingPayment?.bookingDate ?? new Date());
+    setCategoryId(null);
   }, [props.incomingPayment]);
 
   const handleClose = () => {
@@ -47,22 +41,20 @@ export default function SetupRegularModal(props: SetupRegularModalProps) {
   const handleButtonSubmit = () => {
     props.onSubmit({
       id: uuidv4(),
+      bookingDate: bookingDate,
       summary: summary ?? '',
-      every: every,
       amount: amount,
-      dueDate: dueDate,
-      isActive: true,
+      incomingPaymentId: props.incomingPayment?.id.toString() ?? '',
+      categoryId: categoryId,
     });
   };
 
   return (
     <StyledModal open={props.incomingPayment != null} onClose={handleClose}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
-        Setup regular payment
+        Apply payment
       </Typography>
-      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-        This will setup a regular payment that is due every {every} months.
-      </Typography>
+
       <Box component="form">
         <Stack spacing={2}>
           <FormControl fullWidth>
@@ -70,24 +62,9 @@ export default function SetupRegularModal(props: SetupRegularModalProps) {
               id="summary"
               label="summary"
               variant="outlined"
-              onChange={(e) => setSummary(e.target.value)}
+              onChange={(e) => setSummary(e.target.value.substr(0, 100))}
               defaultValue={summary}
             />
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">interval</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={every}
-              label="Interval"
-              onChange={(e) => setEvery(parseInt(e.target.value.toString()))}
-            >
-              <MenuItem value={1}>monthly</MenuItem>
-              <MenuItem value={3}>quarterly</MenuItem>
-              <MenuItem value={12}>yearly</MenuItem>
-            </Select>
           </FormControl>
 
           <FormControl fullWidth>
@@ -103,20 +80,39 @@ export default function SetupRegularModal(props: SetupRegularModalProps) {
 
           <FormControl fullWidth>
             <DatePicker
-              label="due date"
+              label="booking date"
               views={['year', 'month', 'day']}
-              openTo="month"
-              value={dueDate}
+              openTo="year"
+              value={bookingDate}
               minDate={new Date('2010-01-01')}
               onChange={(newValue) => {
-                setDueDate(newValue ?? new Date());
+                setBookingDate(newValue ?? new Date());
               }}
               renderInput={(params) => <TextField {...params} />}
             />
           </FormControl>
+
+          <FormControl fullWidth>
+            <InputLabel id="select-category-label">category</InputLabel>
+            <Select
+              labelId="select-category-label"
+              id="select-category"
+              value={categoryId}
+              label="Category"
+              onChange={(e) => setCategoryId(e.target.value)}
+            >
+              <MenuItem value=""></MenuItem>
+              {props.categories.map((r: Category) => (
+                <MenuItem value={r.id} key={r.id}>
+                  {r.summary}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Stack>
       </Box>
       <Button onClick={handleButtonSubmit}>Save</Button>
+      <Button onClick={() => props.onClose()}>Cancel</Button>
     </StyledModal>
   );
 }

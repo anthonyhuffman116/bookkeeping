@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { LocalizationProvider } from '@mui/lab';
 import enLocale from 'date-fns/locale/en-GB';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 
 export default function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -33,30 +34,36 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
-        <CssBaseline />
+        <Router>
+          <CssBaseline />
 
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                bookkeeping
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        </Box>
+          <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  <Link to="/">bookkeeping</Link>
+                </Typography>
+              </Toolbar>
+            </AppBar>
+          </Box>
 
-        <Container maxWidth="xl">
-          <Dashboard />
-        </Container>
+          <Container maxWidth="xl">
+            <Switch>
+              <Route path="/">
+                <Dashboard />
+              </Route>
+            </Switch>
+          </Container>
+        </Router>
       </LocalizationProvider>
     </ThemeProvider>
   );

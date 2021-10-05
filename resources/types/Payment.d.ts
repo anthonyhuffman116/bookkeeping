@@ -1,9 +1,8 @@
 type Payment = {
-  id: number;
-  name: string;
-  summary: string;
-  account: string;
-  amount: number;
-  ack: boolean;
+  id: string;
   bookingDate: Date;
+  summary: string;
+  amount: number;
+  incomingPaymentId: string;
+  categoryId: null | string;
 };

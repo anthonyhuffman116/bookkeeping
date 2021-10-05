@@ -1,37 +1,37 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PaymentsList from './PaymentsList';
-import RegularsList from './RegularsList';
+import CategoriesList from './CategoriesList';
 
-const mapToRegular = (data: any) => {
+const mapToCategory = (data: any) => {
   let x = data;
-  x.dueDate = new Date(x.dueDate);
+  x.dueDate = x.dueDate ? new Date(x.dueDate) : null;
 
   return x;
 };
 
-const loadRegulars = () => {
-  return fetch('/regulars')
+const loadCategories = () => {
+  return fetch('/categories')
     .then((response) => response.json())
     .then((data) => {
-      return data.map((x) => mapToRegular(x));
+      return data.map((x) => mapToCategory(x));
     });
 };
 
 export default function Dashboard() {
-  const [regulars, setRegulars] = useState<Regular[]>([]);
-  const [regularsIsFetching, setRegularsIsFetching] = useState<boolean>(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesIsFetching, setCategoriesIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
-    setRegularsIsFetching(true);
-    loadRegulars().then((data) => {
-      setRegulars(data);
-      setRegularsIsFetching(false);
+    setCategoriesIsFetching(true);
+    loadCategories().then((data) => {
+      setCategories(data);
+      setCategoriesIsFetching(false);
     });
   }, []);
 
-  const handleRegularCreated = (regular: Regular) => {
-    setRegulars([regular, ...regulars]);
+  const handleCategoryCreated = (category: Category) => {
+    setCategories([category, ...categories]);
   };
 
   return (
@@ -40,10 +40,14 @@ export default function Dashboard() {
 
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <PaymentsList onRegularCreated={handleRegularCreated} />
+          <PaymentsList
+            onCategoryCreated={handleCategoryCreated}
+            onPaymentApplied={(_payment: Payment) => {}}
+            categories={categories}
+          />
         </Grid>
         <Grid item xs={6}>
-          <RegularsList isFetching={regularsIsFetching} regulars={regulars} />
+          <CategoriesList isFetching={categoriesIsFetching} categories={categories} />
         </Grid>
       </Grid>
     </div>

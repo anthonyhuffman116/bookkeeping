@@ -1,0 +1,139 @@
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import StyledModal from './StyledModal';
+import { v4 as uuidv4 } from 'uuid';
+import { DatePicker } from '@mui/lab';
+
+const buildDueDate = (date: null | Date): null | Date => {
+  if (date === null) return null;
+
+  const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  copy.setMonth(copy.getMonth() + 1);
+  copy.setDate(1);
+
+  return copy;
+};
+
+type SetupCategoryModalProps = {
+  onClose: () => void;
+  onSubmit: (category: Category) => void;
+  incomingPayment: null | IncomingPayment;
+};
+
+export default function SetupCategoryModal(props: SetupCategoryModalProps) {
+  const [summary, setSummary] = useState<undefined | string>(props.incomingPayment?.summary);
+  const [every, setEvery] = useState<null | number>(null);
+  const [amount, setAmount] = useState<number>(10);
+  const [dueDate, setDueDate] = useState<null | Date>(null);
+
+  useEffect(() => {
+    setSummary(props.incomingPayment?.summary);
+    setAmount(props.incomingPayment?.amount ?? 0);
+    setEvery(null);
+    setDueDate(buildDueDate(props.incomingPayment?.bookingDate ?? null));
+  }, [props.incomingPayment]);
+
+  const handleClose = () => {
+    props.onClose();
+  };
+
+  const handleButtonSubmit = () => {
+    props.onSubmit({
+      id: uuidv4(),
+      summary: summary ?? '',
+      every: every,
+      expectedAmount: amount,
+      dueDate: dueDate,
+      isActive: true,
+    });
+  };
+
+  let dueDateControl = <></>;
+
+  if (every != null) {
+    dueDateControl = (
+      <FormControl fullWidth>
+        <DatePicker
+          label="due date"
+          views={['year', 'month', 'day']}
+          openTo="month"
+          value={dueDate}
+          minDate={new Date('2010-01-01')}
+          onChange={(newValue) => {
+            setDueDate(newValue ?? new Date());
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </FormControl>
+    );
+  }
+
+  return (
+    <StyledModal open={props.incomingPayment != null} onClose={handleClose}>
+      <Typography id="modal-modal-title" variant="h6" component="h2">
+        Setup category
+      </Typography>
+      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+        {every != null
+          ? 'This will setup a regular payment that is due every ' + every + ' months.'
+          : ''}
+      </Typography>
+      <Box component="form">
+        <Stack spacing={2}>
+          <FormControl fullWidth>
+            <TextField
+              id="summary"
+              label="summary"
+              variant="outlined"
+              onChange={(e) => setSummary(e.target.value)}
+              defaultValue={summary}
+            />
+          </FormControl>
+
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">interval</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={every}
+              label="Interval"
+              onChange={(e) =>
+                setEvery(e.target.value == 0 ? null : parseInt(e.target.value?.toString() ?? '0'))
+              }
+            >
+              <MenuItem value={0}>never</MenuItem>
+              <MenuItem value={1}>monthly</MenuItem>
+              <MenuItem value={3}>quarterly</MenuItem>
+              <MenuItem value={12}>yearly</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <TextField
+              id="amount"
+              label="expected amount in cents"
+              variant="outlined"
+              type="number"
+              onChange={(e) => setAmount(parseInt(e.target.value))}
+              defaultValue={amount}
+            />
+          </FormControl>
+
+          {dueDateControl}
+        </Stack>
+      </Box>
+      <Button onClick={handleButtonSubmit}>Save</Button>
+      <Button onClick={() => props.onClose()}>Cancel</Button>
+    </StyledModal>
+  );
+}
