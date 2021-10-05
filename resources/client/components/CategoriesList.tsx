@@ -1,7 +1,8 @@
-import { Card, CardContent, CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { formatDate } from '../Utils';
 import Amount from './Amount';
+import IsFetching from './IsFetching';
 
 type CategoriesListProps = {
   isFetching: boolean;
@@ -9,13 +10,9 @@ type CategoriesListProps = {
 };
 
 export default function CategoriesList(props: CategoriesListProps) {
-  let list;
-
-  if (props.isFetching) {
-    list = <CircularProgress />;
-  } else {
-    list = (
-      <>
+  return (
+    <Stack spacing={1}>
+      <IsFetching isFetching={props.isFetching}>
         {props.categories.map((category: Category) => (
           <Card key={category.id}>
             <CardContent>
@@ -41,9 +38,7 @@ export default function CategoriesList(props: CategoriesListProps) {
             </CardContent>
           </Card>
         ))}
-      </>
-    );
-  }
-
-  return <Stack spacing={1}>{list}</Stack>;
+      </IsFetching>
+    </Stack>
+  );
 }

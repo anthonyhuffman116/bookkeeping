@@ -1,8 +1,8 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PaymentsList from './PaymentsList';
-import CategoriesList from './CategoriesList';
 import { useFetch } from '../Utils';
+import ReportByCategory from './ReportByCategory';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
@@ -12,13 +12,10 @@ const loadCategories = () => {
 
 export default function Dashboard() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [categoriesIsFetching, setCategoriesIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
-    setCategoriesIsFetching(true);
     loadCategories().then((data) => {
       setCategories(data);
-      setCategoriesIsFetching(false);
     });
   }, []);
 
@@ -31,7 +28,7 @@ export default function Dashboard() {
       <h1>Dashboard</h1>
 
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <PaymentsList
             onCategoryCreated={handleCategoryCreated}
             onPaymentApplied={(_payment: Payment) => {}}
@@ -39,7 +36,7 @@ export default function Dashboard() {
           />
         </Grid>
         <Grid item xs={6}>
-          <CategoriesList isFetching={categoriesIsFetching} categories={categories} />
+          <ReportByCategory />
         </Grid>
       </Grid>
     </div>

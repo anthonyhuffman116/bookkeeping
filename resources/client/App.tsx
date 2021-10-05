@@ -22,7 +22,24 @@ import { LocalizationProvider } from '@mui/lab';
 import enLocale from 'date-fns/locale/en-GB';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import CategoryIcon from '@mui/icons-material/Category';
+import { HashRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import CategoriesPage from './components/CategoriesPage';
+
+function ListItemLink(props) {
+  const { icon, primary, to } = props;
+
+  const CustomLink = (props) => <Link to={to} {...props} />;
+
+  return (
+    <li>
+      <ListItem button component={CustomLink}>
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
+  );
+}
 
 export default function App() {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
@@ -59,12 +76,8 @@ export default function App() {
 
                   <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                     <List>
-                      <ListItem button>
-                        <ListItemIcon>
-                          <InboxIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
-                      </ListItem>
+                      <ListItemLink to="/" icon={<InboxIcon />} primary="Dashboard" />
+                      <ListItemLink to="/categories" icon={<CategoryIcon />} primary="Categories" />
                     </List>
                   </Drawer>
                 </IconButton>
@@ -77,6 +90,9 @@ export default function App() {
 
           <Container maxWidth="xl">
             <Switch>
+              <Route path="/categories">
+                <CategoriesPage />
+              </Route>
               <Route path="/">
                 <Dashboard />
               </Route>

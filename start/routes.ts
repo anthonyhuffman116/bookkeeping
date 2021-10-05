@@ -24,6 +24,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import './routes/incoming-payments';
 import './routes/payments';
 import './routes/categories';
+import './routes/reports';
 
 Route.get('*', async ({ view }: HttpContextContract) => {
   return view.render('index');

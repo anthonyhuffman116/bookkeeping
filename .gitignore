@@ -10,3 +10,4 @@ hot
 public/js/*
 public/css/*
 public/**/*_js*
+deploy.sh
