@@ -1,38 +1,22 @@
 import { CircularProgress, Stack, Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useFetch, usePostFetch } from '../Utils';
 import ApplyIncomingPaymentModal from './ApplyIncomingPayment';
 import PaymentCard from './PaymentCard';
 import SetupIntervalModal from './SetupCategoryModal';
 
-const mapToIncomingPayment = (data: any) => {
-  let x = data;
-  x.bookingDate = new Date(x.bookingDate);
-
-  return x;
-};
-
 const loadIncomingPayments = () => {
-  return fetch('/incoming-payments')
-    .then((response) => response.json())
-    .then((data) => {
-      return data.map((x) => mapToIncomingPayment(x));
-    });
+  return useFetch<IncomingPayment[]>('/incoming-payments').then((data) =>
+    data.map((x) => ({ ...x, bookingDate: new Date(x.bookingDate) }))
+  );
 };
 
 const applyCategory = (category: Category) => {
-  return fetch('/categories', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(category),
-  });
+  return usePostFetch('/categories', category);
 };
 
 const applyPayment = (payment: Payment) => {
-  return fetch('/payments', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payment),
-  });
+  return usePostFetch('/payments', payment);
 };
 
 type PaymentsListProps = {

@@ -2,20 +2,12 @@ import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PaymentsList from './PaymentsList';
 import CategoriesList from './CategoriesList';
-
-const mapToCategory = (data: any) => {
-  let x = data;
-  x.dueDate = x.dueDate ? new Date(x.dueDate) : null;
-
-  return x;
-};
+import { useFetch } from '../Utils';
 
 const loadCategories = () => {
-  return fetch('/categories')
-    .then((response) => response.json())
-    .then((data) => {
-      return data.map((x) => mapToCategory(x));
-    });
+  return useFetch<Category[]>('/categories').then((data) =>
+    data.map((x) => ({ ...x, dueDate: x.dueDate ? new Date(x.dueDate) : null }))
+  );
 };
 
 export default function Dashboard() {
