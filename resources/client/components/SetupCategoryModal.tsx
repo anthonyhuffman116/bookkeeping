@@ -14,9 +14,7 @@ import StyledModal from './StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
 
-const buildDueDate = (date: null | Date): null | Date => {
-  if (date === null) return null;
-
+const buildDueDate = (date: Date): Date => {
   const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   copy.setMonth(copy.getMonth() + 1);
   copy.setDate(1);
@@ -32,15 +30,19 @@ type SetupCategoryModalProps = {
 
 export default function SetupCategoryModal(props: SetupCategoryModalProps) {
   const [summary, setSummary] = useState<undefined | string>(props.incomingPayment?.summary);
-  const [every, setEvery] = useState<null | number>(null);
+  const [every, setEvery] = useState<string | number>('');
   const [amount, setAmount] = useState<number>(10);
   const [dueDate, setDueDate] = useState<null | Date>(null);
 
   useEffect(() => {
     setSummary(props.incomingPayment?.summary);
     setAmount(props.incomingPayment?.amount ?? 0);
-    setEvery(null);
-    setDueDate(buildDueDate(props.incomingPayment?.bookingDate ?? null));
+    setEvery('');
+    setDueDate(
+      props.incomingPayment?.bookingDate != null
+        ? buildDueDate(props.incomingPayment?.bookingDate)
+        : null
+    );
   }, [props.incomingPayment]);
 
   const handleClose = () => {
@@ -51,32 +53,12 @@ export default function SetupCategoryModal(props: SetupCategoryModalProps) {
     props.onSubmit({
       id: uuidv4(),
       summary: summary ?? '',
-      every: every,
+      every: every === '' ? null : parseInt(every.toString()),
       expectedAmount: amount,
-      dueDate: dueDate,
+      dueDate: every === '' ? null : dueDate,
       isActive: true,
     });
   };
-
-  let dueDateControl = <></>;
-
-  if (every != null) {
-    dueDateControl = (
-      <FormControl fullWidth>
-        <DatePicker
-          label="due date"
-          views={['year', 'month', 'day']}
-          openTo="month"
-          value={dueDate}
-          minDate={new Date('2010-01-01')}
-          onChange={(newValue) => {
-            setDueDate(newValue ?? new Date());
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </FormControl>
-    );
-  }
 
   return (
     <StyledModal open={props.incomingPayment != null} onClose={handleClose}>
@@ -84,7 +66,7 @@ export default function SetupCategoryModal(props: SetupCategoryModalProps) {
         Setup category
       </Typography>
       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-        {every != null
+        {every != ''
           ? 'This will setup a regular payment that is due every ' + every + ' months.'
           : ''}
       </Typography>
@@ -107,9 +89,7 @@ export default function SetupCategoryModal(props: SetupCategoryModalProps) {
               id="demo-simple-select"
               value={every}
               label="Interval"
-              onChange={(e) =>
-                setEvery(e.target.value == 0 ? null : parseInt(e.target.value?.toString() ?? '0'))
-              }
+              onChange={(e) => setEvery(e.target.value)}
             >
               <MenuItem value={0}>never</MenuItem>
               <MenuItem value={1}>monthly</MenuItem>
@@ -129,7 +109,23 @@ export default function SetupCategoryModal(props: SetupCategoryModalProps) {
             />
           </FormControl>
 
-          {dueDateControl}
+          {every != '' ? (
+            <FormControl fullWidth>
+              <DatePicker
+                label="due date"
+                views={['year', 'month', 'day']}
+                openTo="month"
+                value={dueDate}
+                minDate={new Date('2010-01-01')}
+                onChange={(newValue) => {
+                  console.log('changed DatePicker');
+                  console.log(newValue);
+                  setDueDate(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </FormControl>
+          ) : null}
         </Stack>
       </Box>
       <Button onClick={handleButtonSubmit}>Save</Button>
