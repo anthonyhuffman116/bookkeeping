@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 import { formatDate, useFetch } from '../Utils';
 import Amount from './Amount';
 import IsFetching from './IsFetching';
+import CheckIcon from '@mui/icons-material/Check';
 
 const loadReport = (from: Date, to: Date) => {
   return useFetch<ReportCategories[]>('/reports/' + formatDate(from) + '/' + formatDate(to)).then(
@@ -47,6 +48,7 @@ export default function ReportByCategory(_: ReportByCategoryProps) {
               <TableCell>Category</TableCell>
               <TableCell>Expected</TableCell>
               <TableCell>Actual</TableCell>
+              <TableCell>Current Budget</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,6 +60,13 @@ export default function ReportByCategory(_: ReportByCategoryProps) {
                 </TableCell>
                 <TableCell align="right">
                   <Amount amount={(row.amount ?? 0.0) / 100} />
+                </TableCell>
+                <TableCell align="right">
+                  {row.expectedAmount == row.amount ? (
+                    <CheckIcon />
+                  ) : (
+                    ((row.expectedAmount - (row.amount ?? 0.0)) / 100.0).toFixed(2) + ' €'
+                  )}
                 </TableCell>
               </TableRow>
             ))}

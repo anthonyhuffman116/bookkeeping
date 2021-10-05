@@ -28,7 +28,7 @@ export default function Dashboard() {
       <h1>Dashboard</h1>
 
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <PaymentsList
             onCategoryCreated={handleCategoryCreated}
             onPaymentApplied={(_payment: Payment) => {}}
