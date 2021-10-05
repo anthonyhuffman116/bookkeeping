@@ -7,8 +7,17 @@ type AmountProps = {
 };
 
 export default function Amount(props: AmountProps) {
+  console.log(props.amount);
+
   const size = props.size ?? 'small';
-  const color = props.amount > 0 ? 'success' : 'error';
+
+  let color: any = 'default';
+
+  if (props.amount > 0) {
+    color = 'success';
+  } else if (props.amount < 0) {
+    color = 'error';
+  }
 
   return <Chip label={props.amount.toFixed(2) + ' €'} color={color} size={size} />;
 }

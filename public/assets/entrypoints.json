@@ -2,7 +2,7 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/assets/app.60bca80c.js"
+        "http://localhost:8080/assets/app.js"
       ]
     }
   }
