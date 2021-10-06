@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { formatDate } from '../Utils';
 import AmountChip from './AmountChip';
@@ -45,11 +45,14 @@ export default function PaymentCard(props: PaymentCardProps) {
         <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
           {additional.join(' · ')}
         </Typography>
+
         <Typography variant="h6" component="div">
           {props.incomingPayment.name}
         </Typography>
 
-        <AmountChip amount={props.incomingPayment.amount / 100} />
+        <Stack direction="row" justifyContent="right">
+          <AmountChip amount={props.incomingPayment.amount / 100} />
+        </Stack>
       </CardContent>
       <CardActions>
         <Button size="small" onClick={() => props.onApply(props.incomingPayment)}>

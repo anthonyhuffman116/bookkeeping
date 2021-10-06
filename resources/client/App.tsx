@@ -62,7 +62,7 @@ export default function App() {
           <CssBaseline />
 
           <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="fixed">
               <Toolbar>
                 <IconButton
                   size="large"
