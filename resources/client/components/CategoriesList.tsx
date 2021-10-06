@@ -1,7 +1,7 @@
 import { Card, CardContent, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { formatDate } from '../Utils';
-import Amount from './Amount';
+import AmountChip from './AmountChip';
 import IsFetching from './IsFetching';
 
 type CategoriesListProps = {
@@ -32,7 +32,7 @@ export default function CategoriesList(props: CategoriesListProps) {
                 </Grid>
 
                 <Grid item xs={2}>
-                  <Amount amount={category.expectedAmount / 100} />
+                  <AmountChip amount={category.expectedAmount / 100} />
                 </Grid>
               </Grid>
             </CardContent>

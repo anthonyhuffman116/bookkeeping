@@ -1,7 +1,7 @@
 import { Card, Typography, Grid, Divider, Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { formatDate, useFetch } from '../Utils';
-import Amount from './Amount';
+import AmountChip from './AmountChip';
 import IsFetching from './IsFetching';
 
 const loadReport = () => {
@@ -43,7 +43,7 @@ export default function ReportBalances(_props: ReportBalancesProps) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Amount amount={balance.amount / 100} />
+                <AmountChip amount={balance.amount / 100} />
               </Grid>
             </Grid>
             <Divider />

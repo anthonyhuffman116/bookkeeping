@@ -1,12 +1,14 @@
 import { Chip } from '@mui/material';
 import React from 'react';
 
-type AmountProps = {
+type AmountChipProps = {
   amount: number;
   size?: 'small' | 'medium' | undefined;
+  format?: Intl.NumberFormat;
 };
 
-export default function Amount(props: AmountProps) {
+export default function AmountChip(props: AmountChipProps) {
+  const format = props.format ?? Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
   const size = props.size ?? 'small';
 
   let color: any = 'default';
@@ -17,5 +19,5 @@ export default function Amount(props: AmountProps) {
     color = 'error';
   }
 
-  return <Chip label={props.amount.toFixed(2) + ' €'} color={color} size={size} />;
+  return <Chip label={format.format(props.amount)} color={color} size={size} />;
 }

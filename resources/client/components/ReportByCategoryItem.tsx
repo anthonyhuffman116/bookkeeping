@@ -1,5 +1,5 @@
 import { TableRow, TableCell, Stack } from '@mui/material';
-import Amount from './Amount';
+import AmountChip from './AmountChip';
 import CheckIcon from '@mui/icons-material/Check';
 import WarningIcon from '@mui/icons-material/Warning';
 import React from 'react';
@@ -39,21 +39,21 @@ export default function ReportByCategoryItem(props: ReportByCategoryItemProps) {
     contents = (
       <Stack direction="row" justifyContent="space-between">
         <WarningIcon />
-        <Amount amount={0} />
+        <AmountChip amount={0} />
       </Stack>
     );
   } else {
-    contents = <Amount amount={remaining} />;
+    contents = <AmountChip amount={remaining} />;
   }
 
   return (
     <TableRow key={props.item.id}>
       <TableCell>{props.item.summary}</TableCell>
       <TableCell align="right">
-        <Amount amount={expected} />
+        <AmountChip amount={expected} />
       </TableCell>
       <TableCell align="right">
-        <Amount amount={actual} />
+        <AmountChip amount={actual} />
       </TableCell>
       <TableCell align="right">{contents}</TableCell>
       <TableCell>

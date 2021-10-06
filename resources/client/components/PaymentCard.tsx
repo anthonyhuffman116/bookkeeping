@@ -1,7 +1,7 @@
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material';
 import React from 'react';
 import { formatDate } from '../Utils';
-import Amount from './Amount';
+import AmountChip from './AmountChip';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 
 type PaymentCardProps = {
@@ -49,7 +49,7 @@ export default function PaymentCard(props: PaymentCardProps) {
           {props.incomingPayment.name}
         </Typography>
 
-        <Amount amount={props.incomingPayment.amount / 100} />
+        <AmountChip amount={props.incomingPayment.amount / 100} />
       </CardContent>
       <CardActions>
         <Button size="small" onClick={() => props.onApply(props.incomingPayment)}>
