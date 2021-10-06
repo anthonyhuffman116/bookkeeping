@@ -50,7 +50,7 @@ export default function ReportByCategory(props: ReportByCategoryProps) {
               <TableCell>Category</TableCell>
               <TableCell>Expected</TableCell>
               <TableCell>Actual</TableCell>
-              <TableCell>Current Budget</TableCell>
+              <TableCell>Remaining</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>

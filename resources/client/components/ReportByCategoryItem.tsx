@@ -1,6 +1,7 @@
-import { TableRow, TableCell } from '@mui/material';
+import { TableRow, TableCell, Stack } from '@mui/material';
 import Amount from './Amount';
 import CheckIcon from '@mui/icons-material/Check';
+import WarningIcon from '@mui/icons-material/Warning';
 import React from 'react';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
@@ -8,14 +9,41 @@ type ReportByCategoryItemProps = {
   item: ReportCategories;
 };
 
+function diff(expected: number, actual: number): null | number {
+  if (expected > 0) {
+    // earnings
+    return expected + actual;
+  } else if (actual < expected) {
+    // spendings exceeded
+    return null;
+  }
+
+  return expected - actual;
+}
+
 export default function ReportByCategoryItem(props: ReportByCategoryItemProps) {
   const actual = (props.item.amount ?? 0.0) / 100;
   const expected = props.item.expectedAmount / 100;
-  const remaining = expected - actual;
+  let remaining = diff(expected, actual);
   let percentage = 0;
 
-  if (expected > 0) {
+  if (expected != 0) {
     percentage = Math.ceil((100 / Math.abs(expected)) * Math.abs(actual));
+  }
+
+  let contents: any = null;
+
+  if (expected == actual) {
+    contents = <CheckIcon />;
+  } else if (remaining == null) {
+    contents = (
+      <Stack direction="row" justifyContent="space-between">
+        <WarningIcon />
+        <Amount amount={0} />
+      </Stack>
+    );
+  } else {
+    contents = <Amount amount={remaining} />;
   }
 
   return (
@@ -27,9 +55,7 @@ export default function ReportByCategoryItem(props: ReportByCategoryItemProps) {
       <TableCell align="right">
         <Amount amount={actual} />
       </TableCell>
-      <TableCell align="right">
-        {expected == actual ? <CheckIcon /> : <Amount amount={remaining} />}
-      </TableCell>
+      <TableCell align="right">{contents}</TableCell>
       <TableCell>
         <CircularProgressWithLabel value={percentage} />
       </TableCell>
