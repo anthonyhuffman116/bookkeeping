@@ -7,8 +7,6 @@ type AmountProps = {
 };
 
 export default function Amount(props: AmountProps) {
-  console.log(props.amount);
-
   const size = props.size ?? 'small';
 
   let color: any = 'default';

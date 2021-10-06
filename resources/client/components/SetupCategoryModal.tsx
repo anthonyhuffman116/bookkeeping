@@ -118,8 +118,6 @@ export default function SetupCategoryModal(props: SetupCategoryModalProps) {
                 value={dueDate}
                 minDate={new Date('2010-01-01')}
                 onChange={(newValue) => {
-                  console.log('changed DatePicker');
-                  console.log(newValue);
                   setDueDate(newValue);
                 }}
                 renderInput={(params) => <TextField {...params} />}

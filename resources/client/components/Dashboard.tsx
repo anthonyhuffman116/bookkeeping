@@ -1,8 +1,9 @@
-import { Grid } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PaymentsList from './PaymentsList';
-import { useFetch } from '../Utils';
+import { beginOfMonth, endOfMonth, useFetch } from '../Utils';
 import ReportByCategory from './ReportByCategory';
+import ReportBalances from './ReportBalances';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
@@ -11,6 +12,8 @@ const loadCategories = () => {
 };
 
 export default function Dashboard() {
+  const from = beginOfMonth(new Date());
+  const to = endOfMonth(new Date());
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -28,15 +31,27 @@ export default function Dashboard() {
       <h1>Dashboard</h1>
 
       <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <PaymentsList
-            onCategoryCreated={handleCategoryCreated}
-            onPaymentApplied={(_payment: Payment) => {}}
-            categories={categories}
-          />
+        <Grid item xs={12} md={6}>
+          <Stack>
+            <h2>New payments</h2>
+            <PaymentsList
+              onCategoryCreated={handleCategoryCreated}
+              onPaymentApplied={(_payment: Payment) => {}}
+              categories={categories}
+            />
+          </Stack>
         </Grid>
-        <Grid item xs={6}>
-          <ReportByCategory />
+        <Grid item xs={12} md={6}>
+          <Stack>
+            <Stack>
+              <h2>Balances</h2>
+              <ReportBalances />
+            </Stack>
+            <Stack>
+              <h2>Budget</h2>
+              <ReportByCategory from={from} to={to} />
+            </Stack>
+          </Stack>
         </Grid>
       </Grid>
     </div>

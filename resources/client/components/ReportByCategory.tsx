@@ -9,9 +9,8 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { formatDate, useFetch } from '../Utils';
-import Amount from './Amount';
 import IsFetching from './IsFetching';
-import CheckIcon from '@mui/icons-material/Check';
+import ReportByCategoryItem from './ReportByCategoryItem';
 
 const loadReport = (from: Date, to: Date) => {
   return useFetch<ReportCategories[]>('/reports/' + formatDate(from) + '/' + formatDate(to)).then(
@@ -25,15 +24,18 @@ const loadReport = (from: Date, to: Date) => {
   );
 };
 
-type ReportByCategoryProps = {};
+type ReportByCategoryProps = {
+  from: Date;
+  to: Date;
+};
 
-export default function ReportByCategory(_: ReportByCategoryProps) {
+export default function ReportByCategory(props: ReportByCategoryProps) {
   const [report, setReport] = useState<ReportCategories[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   useEffect(() => {
     setIsFetching(true);
-    loadReport(new Date('2021-10-01'), new Date('2021-10-31')).then((x) => {
+    loadReport(props.from, props.to).then((x) => {
       setReport(x);
       setIsFetching(false);
     });
@@ -49,26 +51,12 @@ export default function ReportByCategory(_: ReportByCategoryProps) {
               <TableCell>Expected</TableCell>
               <TableCell>Actual</TableCell>
               <TableCell>Current Budget</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {report.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.summary}</TableCell>
-                <TableCell align="right">
-                  <Amount amount={row.expectedAmount / 100} />
-                </TableCell>
-                <TableCell align="right">
-                  <Amount amount={(row.amount ?? 0.0) / 100} />
-                </TableCell>
-                <TableCell align="right">
-                  {row.expectedAmount == row.amount ? (
-                    <CheckIcon />
-                  ) : (
-                    ((row.expectedAmount - (row.amount ?? 0.0)) / 100.0).toFixed(2) + ' €'
-                  )}
-                </TableCell>
-              </TableRow>
+              <ReportByCategoryItem key={row.id} item={row} />
             ))}
           </TableBody>
         </Table>

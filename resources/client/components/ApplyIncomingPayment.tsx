@@ -25,13 +25,13 @@ export default function ApplyIncomingPaymentModal(props: ApplyIncomingPaymentMod
   const [summary, setSummary] = useState<undefined | string>(props.incomingPayment?.summary);
   const [amount, setAmount] = useState<number>(10);
   const [bookingDate, setBookingDate] = useState<Date>(new Date());
-  const [categoryId, setCategoryId] = useState<null | string>(null);
+  const [categoryId, setCategoryId] = useState<string>('');
 
   useEffect(() => {
     setSummary(props.incomingPayment?.summary.substr(0, 100));
     setAmount(props.incomingPayment?.amount ?? 0);
     setBookingDate(props.incomingPayment?.bookingDate ?? new Date());
-    setCategoryId(null);
+    setCategoryId('');
   }, [props.incomingPayment]);
 
   const handleClose = () => {

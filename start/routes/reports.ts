@@ -1,6 +1,18 @@
 import Route from '@ioc:Adonis/Core/Route';
 import Database from '@ioc:Adonis/Lucid/Database';
 
+Route.get('reports/balances', async () => {
+  const report = await Database.rawQuery(
+    `SELECT DISTINCT ON (b.account) b.account AS iban, a.name AS account, b."bookingDate", b.amount
+    FROM balances b
+    LEFT JOIN accounts AS a ON a.iban = b.account
+    ORDER BY b.account, b."bookingDate" DESC;`,
+    []
+  );
+
+  return report.rows;
+});
+
 Route.get('reports/:from/:to', async ({ request }) => {
   const from = request.params().from;
   const to = request.params().to;

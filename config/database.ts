@@ -1,5 +1,5 @@
-import Env from '@ioc:Adonis/Core/Env'
-import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
+import Env from '@ioc:Adonis/Core/Env';
+import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database';
 
 const databaseConfig: DatabaseConfig = {
   connection: Env.get('DB_CONNECTION'),
@@ -14,6 +14,7 @@ const databaseConfig: DatabaseConfig = {
         password: Env.get('PG_PASSWORD', ''),
         database: Env.get('PG_DB_NAME', ''),
       },
+      searchPath: [Env.get('PG_SEARCH_PATH') ?? 'public'],
       migrations: {
         naturalSort: true,
       },
@@ -21,6 +22,6 @@ const databaseConfig: DatabaseConfig = {
       debug: false,
     },
   },
-}
+};
 
-export default databaseConfig
+export default databaseConfig;

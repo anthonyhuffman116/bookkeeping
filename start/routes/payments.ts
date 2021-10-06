@@ -7,5 +7,7 @@ Route.post('payments', async ({ request, response }) => {
   await Database.from('transactions').where('id', payment.incomingPaymentId).update({ ack: true });
   await Database.table('payments').insert(payment);
 
-  response.status(204);
+  response.status(201);
+
+  return payment;
 });
