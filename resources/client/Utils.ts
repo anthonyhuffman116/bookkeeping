@@ -5,12 +5,16 @@ export function formatDate(date: Date) {
   return date.getFullYear() + '-' + month + '-' + day;
 }
 
+export function removeTimeFromDate(date: Date): Date {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12));
+}
+
 export function beginOfMonth(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
+  return removeTimeFromDate(new Date(date.getFullYear(), date.getMonth(), 1));
 }
 
 export function endOfMonth(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return removeTimeFromDate(new Date(date.getFullYear(), date.getMonth() + 1, 0));
 }
 
 export function useFetch<T>(url: string, options: any = {}): Promise<T> {

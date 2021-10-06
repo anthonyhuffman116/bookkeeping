@@ -13,14 +13,7 @@ import React, { useEffect, useState } from 'react';
 import StyledModal from './StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
-
-const buildDueDate = (date: Date): Date => {
-  const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  copy.setMonth(copy.getMonth() + 1);
-  copy.setDate(1);
-
-  return copy;
-};
+import { beginOfMonth, removeTimeFromDate } from '../Utils';
 
 type SetupCategoryModalProps = {
   onClose: () => void;
@@ -29,18 +22,18 @@ type SetupCategoryModalProps = {
 };
 
 export default function SetupCategoryModal(props: SetupCategoryModalProps) {
-  const [summary, setSummary] = useState<undefined | string>(props.incomingPayment?.summary);
+  const [summary, setSummary] = useState<undefined | string>();
   const [every, setEvery] = useState<string | number>('');
   const [amount, setAmount] = useState<number>(10);
   const [dueDate, setDueDate] = useState<null | Date>(null);
 
   useEffect(() => {
-    setSummary(props.incomingPayment?.summary);
+    setSummary(props.incomingPayment?.summary.substr(0, 100));
     setAmount(props.incomingPayment?.amount ?? 0);
     setEvery('');
     setDueDate(
       props.incomingPayment?.bookingDate != null
-        ? buildDueDate(props.incomingPayment?.bookingDate)
+        ? beginOfMonth(props.incomingPayment?.bookingDate)
         : null
     );
   }, [props.incomingPayment]);
@@ -118,7 +111,9 @@ export default function SetupCategoryModal(props: SetupCategoryModalProps) {
                 value={dueDate}
                 minDate={new Date('2010-01-01')}
                 onChange={(newValue) => {
-                  setDueDate(newValue);
+                  newValue != null
+                    ? setDueDate(removeTimeFromDate(new Date(newValue)))
+                    : setDueDate(null);
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />

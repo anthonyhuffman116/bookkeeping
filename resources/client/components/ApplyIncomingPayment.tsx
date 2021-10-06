@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react';
 import StyledModal from './StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
+import { removeTimeFromDate } from '../Utils';
 
 type ApplyIncomingPaymentModalProps = {
   onClose: () => void;
@@ -30,7 +31,7 @@ export default function ApplyIncomingPaymentModal(props: ApplyIncomingPaymentMod
   useEffect(() => {
     setSummary(props.incomingPayment?.summary.substr(0, 100));
     setAmount(props.incomingPayment?.amount ?? 0);
-    setBookingDate(props.incomingPayment?.bookingDate ?? new Date());
+    setBookingDate(removeTimeFromDate(props.incomingPayment?.bookingDate ?? new Date()));
     setCategoryId('');
   }, [props.incomingPayment]);
 
@@ -86,7 +87,7 @@ export default function ApplyIncomingPaymentModal(props: ApplyIncomingPaymentMod
               value={bookingDate}
               minDate={new Date('2010-01-01')}
               onChange={(newValue) => {
-                setBookingDate(newValue ?? new Date());
+                newValue != null ? setBookingDate(removeTimeFromDate(newValue)) : new Date();
               }}
               renderInput={(params) => <TextField {...params} />}
             />
