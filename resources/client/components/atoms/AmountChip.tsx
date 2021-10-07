@@ -5,13 +5,16 @@ type AmountChipProps = {
   amount: number;
   size?: 'small' | 'medium' | undefined;
   format?: Intl.NumberFormat;
+  hidePrefix?: boolean;
 };
 
 export default function AmountChip(props: AmountChipProps) {
-  const format = props.format ?? Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
+  const format =
+    props.format ?? Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'EUR' });
   const size = props.size ?? 'small';
 
   let color: any = 'default';
+  let label = format.format(props.amount);
 
   if (props.amount > 0) {
     color = 'success';
@@ -19,5 +22,9 @@ export default function AmountChip(props: AmountChipProps) {
     color = 'error';
   }
 
-  return <Chip label={format.format(props.amount)} color={color} size={size} />;
+  if (props.amount > 0 && !props.hidePrefix) {
+    label = '+' + label;
+  }
+
+  return <Chip label={label} color={color} size={size} />;
 }

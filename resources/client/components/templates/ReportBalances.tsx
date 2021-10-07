@@ -43,7 +43,7 @@ export default function ReportBalances(_props: ReportBalancesProps) {
                 </Typography>
               </Grid>
               <Grid item>
-                <AmountChip amount={balance.amount / 100} />
+                <AmountChip amount={balance.amount / 100} hidePrefix={true} />
               </Grid>
             </Grid>
             <Divider />
