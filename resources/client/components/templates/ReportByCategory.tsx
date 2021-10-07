@@ -15,7 +15,7 @@ type ReportByCategoryProps = {
   from: Date;
   to: Date;
   isFetching: boolean;
-  categories: ReportCategories[];
+  categories: CategoryBudget[];
 };
 
 export default function ReportByCategory(props: ReportByCategoryProps) {

@@ -6,36 +6,15 @@ import React from 'react';
 import CircularProgressWithLabel from '../molecules/CircularProgressWithLabel';
 
 type ReportByCategoryItemProps = {
-  item: ReportCategories;
+  item: CategoryBudget;
 };
 
-function diff(expected: number, actual: number): null | number {
-  if (expected > 0) {
-    // earnings
-    return expected + actual;
-  } else if (actual < expected) {
-    // spendings exceeded
-    return null;
-  }
-
-  return expected - actual;
-}
-
 export default function ReportByCategoryItem(props: ReportByCategoryItemProps) {
-  const actual = (props.item.amount ?? 0.0) / 100;
-  const expected = props.item.expectedAmount / 100;
-  let remaining = diff(expected, actual);
-  let percentage = 0;
-
-  if (expected != 0) {
-    percentage = Math.ceil((100 / Math.abs(expected)) * Math.abs(actual));
-  }
-
   let contents: any = null;
 
-  if (expected == actual) {
+  if (props.item.expectedAmount == props.item.amount) {
     contents = <CheckIcon />;
-  } else if (remaining == null) {
+  } else if (props.item.remaining == null) {
     contents = (
       <Stack direction="row" justifyContent="space-between">
         <WarningIcon />
@@ -43,21 +22,21 @@ export default function ReportByCategoryItem(props: ReportByCategoryItemProps) {
       </Stack>
     );
   } else {
-    contents = <AmountChip amount={remaining} />;
+    contents = <AmountChip amount={props.item.remaining / 100} />;
   }
 
   return (
     <TableRow key={props.item.id}>
       <TableCell>{props.item.summary}</TableCell>
       <TableCell align="right">
-        <AmountChip amount={expected} />
+        <AmountChip amount={props.item.expectedAmount / 100} />
       </TableCell>
       <TableCell align="right">
-        <AmountChip amount={actual} />
+        <AmountChip amount={(props.item.amount ?? 0) / 100} />
       </TableCell>
       <TableCell align="right">{contents}</TableCell>
       <TableCell>
-        <CircularProgressWithLabel value={percentage} />
+        <CircularProgressWithLabel value={props.item.percentage ?? 0.0} />
       </TableCell>
     </TableRow>
   );
