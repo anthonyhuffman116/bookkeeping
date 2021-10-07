@@ -1,6 +1,8 @@
-import { CircularProgress, Stack, Container } from '@mui/material';
+import { Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useFetch, usePostFetch } from '../../Utils';
+import Empty from '../molecules/Empty';
+import IsFetching from '../atoms/IsFetching';
 import ApplyIncomingPaymentModal from './ApplyIncomingPaymentModal';
 import PaymentCard from './PaymentCard';
 import SetupIntervalModal from './SetupCategoryModal';
@@ -26,7 +28,7 @@ type PaymentsListProps = {
 };
 
 export default function PaymentsList(props: PaymentsListProps) {
-  const [isFetching, setIsFetching] = useState<Boolean>(true);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
   const [incomingPayments, setIncomingPayments] = useState<IncomingPayment[]>([]);
   const [incomingPaymentToSetupCategory, setIncomingPaymentToSetupCategory] =
     useState<null | IncomingPayment>(null);
@@ -73,15 +75,9 @@ export default function PaymentsList(props: PaymentsListProps) {
     });
   };
 
-  let contents = (
-    <Container fixed>
-      <CircularProgress />
-    </Container>
-  );
-
-  if (!isFetching) {
-    contents = (
-      <>
+  return (
+    <IsFetching isFetching={isFetching}>
+      <Empty items={incomingPayments} text="There are no new payments.">
         <SetupIntervalModal
           onSubmit={handleSubmitSetupIntervalModal}
           onClose={handleCloseSetupCategory}
@@ -103,9 +99,7 @@ export default function PaymentsList(props: PaymentsListProps) {
             />
           ))}
         </Stack>
-      </>
-    );
-  }
-
-  return contents;
+      </Empty>
+    </IsFetching>
+  );
 }

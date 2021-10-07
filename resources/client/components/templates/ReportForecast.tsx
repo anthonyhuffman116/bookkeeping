@@ -10,6 +10,7 @@ import {
 import React from 'react';
 import AmountChip from '../atoms/AmountChip';
 import IsFetching from '../atoms/IsFetching';
+import Empty from '../molecules/Empty';
 
 type ReportForecastProps = {
   isFetching: boolean;
@@ -33,30 +34,32 @@ export default function ReportForecast(props: ReportForecastProps) {
 
   return (
     <IsFetching isFetching={props.isFetching}>
-      <TableContainer component={Paper}>
-        <Table aria-label="report">
-          <TableHead>
-            <TableRow>
-              <TableCell>Earnings</TableCell>
-              <TableCell>Expenses</TableCell>
-              <TableCell>Sum</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                <AmountChip amount={earnings / 100} />
-              </TableCell>
-              <TableCell>
-                <AmountChip amount={expenses / 100} />
-              </TableCell>
-              <TableCell>
-                <AmountChip amount={(expenses + earnings) / 100} />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Empty items={props.categories} text="There is not enough data to calculate a forecast yet.">
+        <TableContainer component={Paper}>
+          <Table aria-label="report">
+            <TableHead>
+              <TableRow>
+                <TableCell>Earnings</TableCell>
+                <TableCell>Expenses</TableCell>
+                <TableCell>Sum</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <AmountChip amount={earnings / 100} />
+                </TableCell>
+                <TableCell>
+                  <AmountChip amount={expenses / 100} />
+                </TableCell>
+                <TableCell>
+                  <AmountChip amount={(expenses + earnings) / 100} />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Empty>
     </IsFetching>
   );
 }

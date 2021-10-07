@@ -26,7 +26,7 @@ Route.get('reports/:from/:to', async ({ request }) => {
       GROUP BY p."categoryId") AS x ON x."categoryId" = c.id
   WHERE ("dueDate" BETWEEN ? AND ? OR "dueDate" IS NULL)
   AND c."isActive" = true
-  ORDER BY every, summary`,
+  ORDER BY summary`,
     [from, to, from, to]
   );
 
