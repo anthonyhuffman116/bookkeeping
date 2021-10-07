@@ -1,9 +1,9 @@
 import { TableRow, TableCell, Stack } from '@mui/material';
-import AmountChip from './AmountChip';
+import AmountChip from '../atoms/AmountChip';
 import CheckIcon from '@mui/icons-material/Check';
 import WarningIcon from '@mui/icons-material/Warning';
 import React from 'react';
-import CircularProgressWithLabel from './CircularProgressWithLabel';
+import CircularProgressWithLabel from '../molecules/CircularProgressWithLabel';
 
 type ReportByCategoryItemProps = {
   item: ReportCategories;

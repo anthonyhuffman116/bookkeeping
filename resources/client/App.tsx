@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import Dashboard from './components/Dashboard';
+import DashboardPage from './components/pages/DashboardPage';
+import CategoriesPage from './components/pages/CategoriesPage';
 import Box from '@mui/material/Box';
 import {
   AppBar,
@@ -24,7 +25,6 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import CategoryIcon from '@mui/icons-material/Category';
 import { HashRouter as Router, Link, Route, Switch } from 'react-router-dom';
-import CategoriesPage from './components/CategoriesPage';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -94,7 +94,7 @@ export default function App() {
                 <CategoriesPage />
               </Route>
               <Route path="/">
-                <Dashboard />
+                <DashboardPage />
               </Route>
             </Switch>
           </Container>

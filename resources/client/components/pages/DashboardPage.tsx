@@ -1,9 +1,9 @@
 import { Grid, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import PaymentsList from './PaymentsList';
-import { beginOfMonth, endOfMonth, useFetch } from '../Utils';
-import ReportByCategory from './ReportByCategory';
-import ReportBalances from './ReportBalances';
+import PaymentsList from '../templates/PaymentsList';
+import { beginOfMonth, endOfMonth, useFetch } from '../../Utils';
+import ReportByCategory from '../templates/ReportByCategory';
+import ReportBalances from '../templates/ReportBalances';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
@@ -11,7 +11,7 @@ const loadCategories = () => {
   );
 };
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const from = beginOfMonth(new Date());
   const to = endOfMonth(new Date());
   const [categories, setCategories] = useState<Category[]>([]);

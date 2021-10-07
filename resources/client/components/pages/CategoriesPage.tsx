@@ -1,8 +1,8 @@
 import { Container } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { useFetch } from '../Utils';
-import CategoriesList from './CategoriesList';
-import IsFetching from './IsFetching';
+import { useFetch } from '../../Utils';
+import CategoriesList from '../templates/CategoriesList';
+import IsFetching from '../atoms/IsFetching';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>

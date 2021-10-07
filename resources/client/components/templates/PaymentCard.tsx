@@ -1,7 +1,7 @@
 import { Button, Card, CardActions, CardContent, Stack, Typography } from '@mui/material';
 import React from 'react';
-import { formatDate } from '../Utils';
-import AmountChip from './AmountChip';
+import { formatDate } from '../../Utils';
+import AmountChip from '../atoms/AmountChip';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 
 type PaymentCardProps = {

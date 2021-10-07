@@ -10,10 +10,10 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import StyledModal from './StyledModal';
+import StyledModal from '../molecules/StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
-import { beginOfMonth, removeTimeFromDate } from '../Utils';
+import { beginOfMonth, removeTimeFromDate } from '../../Utils';
 
 type SetupCategoryModalProps = {
   onClose: () => void;

@@ -1,7 +1,7 @@
 import { CircularProgress, Stack, Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useFetch, usePostFetch } from '../Utils';
-import ApplyIncomingPaymentModal from './ApplyIncomingPayment';
+import { useFetch, usePostFetch } from '../../Utils';
+import ApplyIncomingPaymentModal from './ApplyIncomingPaymentModal';
 import PaymentCard from './PaymentCard';
 import SetupIntervalModal from './SetupCategoryModal';
 

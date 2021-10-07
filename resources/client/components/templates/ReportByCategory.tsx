@@ -8,8 +8,8 @@ import {
   TableBody,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { formatDate, useFetch } from '../Utils';
-import IsFetching from './IsFetching';
+import { formatDate, useFetch } from '../../Utils';
+import IsFetching from '../atoms/IsFetching';
 import ReportByCategoryItem from './ReportByCategoryItem';
 
 const loadReport = (from: Date, to: Date) => {

@@ -1,8 +1,8 @@
 import { Card, Typography, Grid, Divider, Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { formatDate, useFetch } from '../Utils';
-import AmountChip from './AmountChip';
-import IsFetching from './IsFetching';
+import { formatDate, useFetch } from '../../Utils';
+import AmountChip from '../atoms/AmountChip';
+import IsFetching from '../atoms/IsFetching';
 
 const loadReport = () => {
   return useFetch<Balance[]>('/reports/balances').then((data) =>

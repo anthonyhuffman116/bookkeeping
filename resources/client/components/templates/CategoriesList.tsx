@@ -1,8 +1,8 @@
 import { Card, CardContent, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
-import { formatDate } from '../Utils';
-import AmountChip from './AmountChip';
-import IsFetching from './IsFetching';
+import { formatDate } from '../../Utils';
+import AmountChip from '../atoms/AmountChip';
+import IsFetching from '../atoms/IsFetching';
 
 type CategoriesListProps = {
   isFetching: boolean;
