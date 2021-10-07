@@ -7,42 +7,20 @@ import {
   TableCell,
   TableBody,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { formatDate, useFetch } from '../../Utils';
+import React from 'react';
 import IsFetching from '../atoms/IsFetching';
 import ReportByCategoryItem from './ReportByCategoryItem';
-
-const loadReport = (from: Date, to: Date) => {
-  return useFetch<ReportCategories[]>('/reports/' + formatDate(from) + '/' + formatDate(to)).then(
-    (data) =>
-      data.map((x) => ({
-        ...x,
-        amount: x.amount != null ? parseInt(x.amount?.toString()) : null,
-        expectedAmount: parseInt(x.expectedAmount.toString()),
-        dueDate: x.dueDate != null ? new Date(x.dueDate) : null,
-      }))
-  );
-};
 
 type ReportByCategoryProps = {
   from: Date;
   to: Date;
+  isFetching: boolean;
+  categories: ReportCategories[];
 };
 
 export default function ReportByCategory(props: ReportByCategoryProps) {
-  const [report, setReport] = useState<ReportCategories[]>([]);
-  const [isFetching, setIsFetching] = useState<boolean>(true);
-
-  useEffect(() => {
-    setIsFetching(true);
-    loadReport(props.from, props.to).then((x) => {
-      setReport(x);
-      setIsFetching(false);
-    });
-  }, []);
-
   return (
-    <IsFetching isFetching={isFetching}>
+    <IsFetching isFetching={props.isFetching}>
       <TableContainer component={Paper}>
         <Table aria-label="report">
           <TableHead>
@@ -55,7 +33,7 @@ export default function ReportByCategory(props: ReportByCategoryProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {report.map((row) => (
+            {props.categories.map((row) => (
               <ReportByCategoryItem key={row.id} item={row} />
             ))}
           </TableBody>
