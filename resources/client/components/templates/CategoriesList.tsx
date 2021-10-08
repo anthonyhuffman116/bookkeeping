@@ -18,19 +18,19 @@ export default function CategoriesList(props: CategoriesListProps) {
           {props.categories.map((category: Category) => (
             <Card key={category.id}>
               <CardContent>
-                <Grid container spacing={1}>
+                <Grid container spacing={1} justifyItems="right">
                   <Grid item xs={12}>
+                    <Typography variant="h6" component="div">
+                      {category.summary}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={10}>
                     {category.dueDate != null ? (
                       <Typography sx={{ fontSize: 12 }} color="text.secondary" gutterBottom>
                         {formatDate(category.dueDate)} (every {category.every} month)
                       </Typography>
                     ) : null}
-                  </Grid>
-
-                  <Grid item xs={10}>
-                    <Typography variant="h6" component="div">
-                      {category.summary}
-                    </Typography>
                   </Grid>
 
                   <Grid item xs={2}>
