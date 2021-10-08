@@ -6,3 +6,7 @@ type Payment = {
   incomingPaymentId: string;
   categoryId: null | string;
 };
+
+type AppliedPayment = Payment & {
+  category: string;
+};

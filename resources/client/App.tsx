@@ -24,7 +24,9 @@ import enLocale from 'date-fns/locale/en-GB';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import CategoryIcon from '@mui/icons-material/Category';
+import PaymentsIcon from '@mui/icons-material/Euro';
 import { HashRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import PaymentsPage from './components/pages/PaymentsPage';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -77,6 +79,7 @@ export default function App() {
                   <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                     <List>
                       <ListItemLink to="/" icon={<InboxIcon />} primary="Dashboard" />
+                      <ListItemLink to="/payments" icon={<PaymentsIcon />} primary="Payments" />
                       <ListItemLink to="/categories" icon={<CategoryIcon />} primary="Categories" />
                     </List>
                   </Drawer>
@@ -90,6 +93,9 @@ export default function App() {
 
           <Container maxWidth="xl">
             <Switch>
+              <Route path="/payments">
+                <PaymentsPage />
+              </Route>
               <Route path="/categories">
                 <CategoriesPage />
               </Route>

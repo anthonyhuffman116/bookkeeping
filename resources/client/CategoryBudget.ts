@@ -1,4 +1,7 @@
-export function diff(expected: number, actual: number): null | number {
+export function calculateRemaining(expected: number, actual: number): null | number {
+  if (expected == actual) {
+    return 0;
+  }
   if (expected > 0) {
     // earnings
     return expected + actual;
@@ -15,7 +18,7 @@ export function calculateBudget(categories: CategoryBudget[]): CategoryBudget[] 
     const actual = category.amount ?? 0.0;
     const expected = category.expectedAmount;
 
-    let remaining = diff(expected, actual);
+    let remaining = calculateRemaining(expected, actual);
     let percentage = 0;
 
     if (expected != 0) {

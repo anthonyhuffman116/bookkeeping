@@ -17,20 +17,41 @@ type ReportForecastProps = {
   categories: CategoryBudget[];
 };
 
+const sumTotal = (s: number, item: CategoryBudget, _a, _b) => {
+  return s + item.expectedAmount;
+};
+
 const sumRemaining = (s: number, item: CategoryBudget, _a, _b) => {
   return s + (item.remaining ?? 0);
 };
 
 const sumFilteredBy = (
   categories: CategoryBudget[],
-  expression: (x: CategoryBudget) => unknown
+  expression: (x: CategoryBudget) => unknown,
+  sum: (s: number, item: CategoryBudget, _a, _b) => number
 ): number => {
-  return categories.filter(expression).reduce<number>(sumRemaining, 0);
+  return categories.filter(expression).reduce<number>(sum, 0);
 };
 
 export default function ReportForecast(props: ReportForecastProps) {
-  const expenses = sumFilteredBy(props.categories, (x) => x.remaining && x.remaining < 0);
-  const earnings = sumFilteredBy(props.categories, (x) => x.remaining && x.remaining > 0);
+  const filtered = props.categories.filter((x) => x.remaining && x.remaining < 0);
+
+  filtered.forEach((c) => {
+    console.log(c.summary, c.remaining);
+  });
+
+  const expensesTotal = sumFilteredBy(props.categories, (x) => x.expectedAmount < 0, sumTotal);
+  const earningsTotal = sumFilteredBy(props.categories, (x) => x.expectedAmount > 0, sumTotal);
+  const expensesRemaining = sumFilteredBy(
+    props.categories,
+    (x) => x.remaining && x.remaining < 0,
+    sumRemaining
+  );
+  const earningsRemainig = sumFilteredBy(
+    props.categories,
+    (x) => x.remaining && x.remaining > 0,
+    sumRemaining
+  );
 
   return (
     <IsFetching isFetching={props.isFetching}>
@@ -39,6 +60,7 @@ export default function ReportForecast(props: ReportForecastProps) {
           <Table aria-label="report">
             <TableHead>
               <TableRow>
+                <TableCell></TableCell>
                 <TableCell>Earnings</TableCell>
                 <TableCell>Expenses</TableCell>
                 <TableCell>Sum</TableCell>
@@ -46,14 +68,28 @@ export default function ReportForecast(props: ReportForecastProps) {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>
-                  <AmountChip amount={earnings / 100} />
+                <TableCell>Expected</TableCell>
+                <TableCell align="right">
+                  <AmountChip amount={earningsTotal / 100} />
                 </TableCell>
-                <TableCell>
-                  <AmountChip amount={expenses / 100} />
+                <TableCell align="right">
+                  <AmountChip amount={expensesTotal / 100} />
                 </TableCell>
-                <TableCell>
-                  <AmountChip amount={(expenses + earnings) / 100} />
+                <TableCell align="right">
+                  <AmountChip amount={(expensesTotal + earningsTotal) / 100} />
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell>Remaing</TableCell>
+                <TableCell align="right">
+                  <AmountChip amount={earningsRemainig / 100} />
+                </TableCell>
+                <TableCell align="right">
+                  <AmountChip amount={expensesRemaining / 100} />
+                </TableCell>
+                <TableCell align="right">
+                  <AmountChip amount={(expensesRemaining + earningsRemainig) / 100} />
                 </TableCell>
               </TableRow>
             </TableBody>

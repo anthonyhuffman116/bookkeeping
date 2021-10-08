@@ -5,28 +5,14 @@ import AmountChip from '../atoms/AmountChip';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 
 type PaymentCardProps = {
-  incomingPayment: IncomingPayment;
-  onSetupCategory: (payment: IncomingPayment) => void;
-  onApply: (payment: IncomingPayment) => void;
+  payment: AppliedPayment;
 };
 
 export default function PaymentCard(props: PaymentCardProps) {
-  const additionalInformation = [
-    props.incomingPayment.summary,
-    props.incomingPayment.account,
-    formatDate(props.incomingPayment.bookingDate),
-  ];
-
-  const additional = additionalInformation.filter((x) => x != '');
-
-  const handleSetupCategory = () => {
-    props.onSetupCategory(props.incomingPayment);
-  };
-
   let detailsLink = <></>;
 
-  if (props.incomingPayment.name.startsWith('AMAZON')) {
-    const orderId = props.incomingPayment.summary.split(' ')[0];
+  if (props.payment.summary.startsWith('AMAZON')) {
+    const orderId = props.payment.summary.split(' ')[0];
     detailsLink = (
       <Button
         href={
@@ -42,25 +28,29 @@ export default function PaymentCard(props: PaymentCardProps) {
   return (
     <Card>
       <CardContent>
-        <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
-          {additional.join(' · ')}
-        </Typography>
+        <Stack direction="row" alignItems="end" justifyContent="space-between">
+          <Stack>
+            <Typography variant="h6" component="div">
+              {props.payment.category}
+            </Typography>
 
-        <Typography variant="h6" component="div">
-          {props.incomingPayment.name}
-        </Typography>
+            <Typography sx={{ fontSize: 14 }} component="div">
+              {props.payment.summary}
+            </Typography>
 
-        <Stack direction="row" justifyContent="right">
-          <AmountChip amount={props.incomingPayment.amount / 100} />
+            <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
+              {formatDate(props.payment.bookingDate)}
+            </Typography>
+          </Stack>
+
+          <AmountChip amount={props.payment.amount / 100} />
         </Stack>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => props.onApply(props.incomingPayment)}>
+        <Button size="small" onClick={() => {}}>
           Apply
         </Button>
-        <Button size="small" onClick={handleSetupCategory}>
-          Setup category
-        </Button>
+
         {detailsLink}
       </CardActions>
     </Card>

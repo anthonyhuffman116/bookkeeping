@@ -1,11 +1,13 @@
-import { Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import PaymentsList from '../templates/PaymentsList';
+import IncomingPaymentsList from '../templates/IncomingPaymentsList';
 import { beginOfMonth, endOfMonth, formatDate, useFetch } from '../../Utils';
 import ReportByCategory from '../templates/ReportByCategory';
 import ReportBalances from '../templates/ReportBalances';
 import ReportForecast from '../templates/ReportForecast';
 import { calculateBudget } from '../../CategoryBudget';
+import { Link } from 'react-router-dom';
+import PageRoot from '../atoms/PageRoot';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
@@ -51,14 +53,20 @@ export default function DashboardPage() {
   };
 
   return (
-    <div>
+    <PageRoot>
       <h1>Dashboard</h1>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Stack>
-            <h2>New payments</h2>
-            <PaymentsList
+            <Stack direction="row" justifyContent="space-between" alignContent="baseline">
+              <h2>New payments</h2>
+              <Button component={Link} to="/payments" variant="text">
+                see all payments
+              </Button>
+            </Stack>
+
+            <IncomingPaymentsList
               onCategoryCreated={handleCategoryCreated}
               onPaymentApplied={(_payment: Payment) => {}}
               categories={categories}
@@ -79,7 +87,13 @@ export default function DashboardPage() {
               />
             </Stack>
             <Stack>
-              <h2>Budget</h2>
+              <Stack direction="row" justifyContent="space-between" alignContent="baseline">
+                <h2>Budget</h2>
+                <Button component={Link} to="/categories" variant="text">
+                  setup categories
+                </Button>
+              </Stack>
+
               <ReportByCategory
                 categories={reportCategories}
                 from={from}
@@ -90,6 +104,6 @@ export default function DashboardPage() {
           </Stack>
         </Grid>
       </Grid>
-    </div>
+    </PageRoot>
   );
 }

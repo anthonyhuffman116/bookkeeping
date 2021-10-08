@@ -1,8 +1,8 @@
-import { Container } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useFetch } from '../../Utils';
 import CategoriesList from '../templates/CategoriesList';
 import IsFetching from '../atoms/IsFetching';
+import PageRoot from '../atoms/PageRoot';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
@@ -23,11 +23,11 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <Container>
+    <PageRoot>
       <h1>Categories</h1>
       <IsFetching isFetching={isFetching}>
         <CategoriesList isFetching={isFetching} categories={categories} />
       </IsFetching>
-    </Container>
+    </PageRoot>
   );
 }
