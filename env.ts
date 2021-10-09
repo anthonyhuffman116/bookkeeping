@@ -12,7 +12,7 @@
 |
 */
 
-import Env from '@ioc:Adonis/Core/Env'
+import Env from '@ioc:Adonis/Core/Env';
 
 export default Env.rules({
   HOST: Env.schema.string({ format: 'host' }),
@@ -23,4 +23,17 @@ export default Env.rules({
   SESSION_DRIVER: Env.schema.string(),
   DRIVE_DISK: Env.schema.enum(['local'] as const),
   NODE_ENV: Env.schema.enum(['development', 'production', 'testing'] as const),
-})
+  DB_CONNECTION: Env.schema.string(),
+  PG_HOST: Env.schema.string({ format: 'host' }),
+  PG_PORT: Env.schema.number(),
+  PG_USER: Env.schema.string(),
+  PG_PASSWORD: Env.schema.string(),
+  PG_DB_NAME: Env.schema.string(),
+  PG_SEARCH_PATH: Env.schema.string(),
+  TZ: Env.schema.string(),
+  FINTS_URL: Env.schema.string(),
+  FINTS_NAME: Env.schema.string(),
+  FINTS_PIN: Env.schema.string(),
+  FINTS_BLZ: Env.schema.string(),
+  FINTS_PRODUCT_ID: Env.schema.string(),
+});
