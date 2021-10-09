@@ -1,6 +1,7 @@
 import { BaseCommand } from '@adonisjs/core/build/standalone';
 import Database from '@ioc:Adonis/Lucid/Database';
-import { PinTanClient, SEPAAccount, Statement, Transaction } from 'fints';
+import { PinTanClient, SEPAAccount, Balance as SEPABalance, Statement, Transaction } from 'fints';
+import { v4 as uuid4v } from 'uuid';
 
 function removeTimeFromDate(date: Date): Date {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -53,8 +54,16 @@ export default class FinTs extends BaseCommand {
 
     await Promise.all(
       accounts.map(async (account: SEPAAccount) => {
+        return await this.insertBalanceIntoDatabase(await client.balance(account));
+      })
+    );
+
+    await Promise.all(
+      accounts.map(async (account: SEPAAccount) => {
         const transactions = await this.getTransactions(client, account, startDate, endDate);
-        const affected = await Promise.all(this.insertIntoDatabase(account, transactions));
+        const affected = await Promise.all(
+          this.insertTransactionsIntoDatabase(account, transactions)
+        );
         const rowCount = affected.reduce<number>((a, x) => a + x.rowCount, 0);
 
         // TODO: report newly transmitted transactions to Discord also
@@ -75,7 +84,7 @@ export default class FinTs extends BaseCommand {
     return statements.map((s: Statement) => s.transactions).flat();
   }
 
-  private insertIntoDatabase(
+  private insertTransactionsIntoDatabase(
     account: SEPAAccount,
     transactions: Transaction[]
   ): Promise<InsertResult>[] {
@@ -99,5 +108,22 @@ export default class FinTs extends BaseCommand {
         ]
       ).exec();
     });
+  }
+
+  private insertBalanceIntoDatabase(balance: SEPABalance): Promise<InsertResult> {
+    console.log(`inserting balance ${balance.bookedBalance * 100} for ${balance.account.iban}`);
+
+    return Database.rawQuery<InsertResult>(
+      `INSERT INTO balances (id, "bookingDate", account, amount, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        uuid4v(),
+        new Date(),
+        balance.account.iban,
+        Math.floor(balance.bookedBalance * 100),
+        new Date(),
+        new Date(),
+      ]
+    ).exec();
   }
 }
