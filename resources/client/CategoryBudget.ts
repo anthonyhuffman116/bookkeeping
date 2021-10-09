@@ -1,10 +1,18 @@
+function calculateRemainingEarnings(expected: number, actual: number): number {
+  if (actual > 0) {
+    return expected - actual;
+  } else {
+    return expected + actual;
+  }
+}
+
 export function calculateRemaining(expected: number, actual: number): null | number {
   if (expected == actual) {
     return 0;
   }
   if (expected > 0) {
     // earnings
-    return expected + actual;
+    return calculateRemainingEarnings(expected, actual);
   } else if (actual < expected) {
     // spendings exceeded
     return null;
