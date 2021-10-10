@@ -6,4 +6,5 @@ type IncomingPayment = {
   amount: number;
   ack: boolean;
   bookingDate: Date;
+  account: null | string;
 };

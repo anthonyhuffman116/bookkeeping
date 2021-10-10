@@ -50,6 +50,12 @@ export default function IncomingPaymentCard(props: IncomingPaymentCardProps) {
           {props.incomingPayment.name}
         </Typography>
 
+        {props.incomingPayment.account && (
+          <Typography sx={{ fontSize: 12 }} color="text.secondary">
+            {props.incomingPayment.account}
+          </Typography>
+        )}
+
         <Stack direction="row" justifyContent="right">
           <AmountChip amount={props.incomingPayment.amount / 100} />
         </Stack>
