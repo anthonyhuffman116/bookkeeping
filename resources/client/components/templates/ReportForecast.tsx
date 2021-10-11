@@ -7,14 +7,14 @@ import {
   TableCell,
   TableBody,
 } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import AmountChip from '../atoms/AmountChip';
 import IsFetching from '../atoms/IsFetching';
 import Empty from '../molecules/Empty';
+import { CategoryBudgetContext } from '../pages/DashboardPage';
 
 type ReportForecastProps = {
   isFetching: boolean;
-  categories: CategoryBudget[];
 };
 
 const sumTotal = (s: number, item: CategoryBudget, _a, _b) => {
@@ -34,22 +34,25 @@ const sumFilteredBy = (
 };
 
 export default function ReportForecast(props: ReportForecastProps) {
-  const expensesTotal = sumFilteredBy(props.categories, (x) => x.expectedAmount < 0, sumTotal);
-  const earningsTotal = sumFilteredBy(props.categories, (x) => x.expectedAmount > 0, sumTotal);
+  const categories = useContext<CategoryBudget[]>(CategoryBudgetContext);
+  const expensesTotal = sumFilteredBy(categories, (x) => x.expectedAmount < 0, sumTotal);
+  const earningsTotal = sumFilteredBy(categories, (x) => x.expectedAmount > 0, sumTotal);
+
   const expensesRemaining = sumFilteredBy(
-    props.categories,
+    categories,
     (x) => x.remaining && x.remaining < 0,
     sumRemaining
   );
+
   const earningsRemainig = sumFilteredBy(
-    props.categories,
+    categories,
     (x) => x.remaining && x.remaining > 0,
     sumRemaining
   );
 
   return (
     <IsFetching isFetching={props.isFetching}>
-      <Empty items={props.categories} text="There is not enough data to calculate a forecast yet.">
+      <Empty items={categories} text="There is not enough data to calculate forecasts yet.">
         <TableContainer component={Paper}>
           <Table aria-label="report">
             <TableHead>

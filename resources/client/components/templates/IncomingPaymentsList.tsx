@@ -23,7 +23,7 @@ const applyPayment = (payment: Payment) => {
 
 type IncomingPaymentsListProps = {
   onCategoryCreated: (category: Category) => void;
-  onPaymentApplied: (payment: Payment) => void;
+  onIncomingPaymentApplied: (payment: Payment) => void;
   categories: Category[];
 };
 
@@ -54,7 +54,7 @@ export default function IncomingPaymentsList(props: IncomingPaymentsListProps) {
 
   const handleSubmitApply = (payment: Payment) => {
     applyPayment(payment).then(() => {
-      props.onPaymentApplied(payment);
+      props.onIncomingPaymentApplied(payment);
       setIncomingPayments(incomingPayments.filter((x) => x.id != incomingPaymentToApply?.id));
       setIncomingPaymentToApply(null);
     });

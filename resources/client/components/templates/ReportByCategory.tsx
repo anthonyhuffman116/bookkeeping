@@ -7,22 +7,22 @@ import {
   TableCell,
   TableBody,
 } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import IsFetching from '../atoms/IsFetching';
 import Empty from '../molecules/Empty';
+import { CategoryBudgetContext } from '../pages/DashboardPage';
 import ReportByCategoryItem from './ReportByCategoryItem';
 
 type ReportByCategoryProps = {
-  from: Date;
-  to: Date;
   isFetching: boolean;
-  categories: CategoryBudget[];
 };
 
 export default function ReportByCategory(props: ReportByCategoryProps) {
+  const categoryBudgets = useContext<CategoryBudget[]>(CategoryBudgetContext);
+
   return (
     <IsFetching isFetching={props.isFetching}>
-      <Empty items={props.categories} text="There is not enough data to calculate budgets yet.">
+      <Empty items={categoryBudgets} text="There is not enough data to calculate budgets yet.">
         <TableContainer component={Paper}>
           <Table aria-label="report">
             <TableHead>
@@ -35,7 +35,7 @@ export default function ReportByCategory(props: ReportByCategoryProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.categories.map((row) => (
+              {categoryBudgets.map((row) => (
                 <ReportByCategoryItem key={row.id} item={row} />
               ))}
             </TableBody>
