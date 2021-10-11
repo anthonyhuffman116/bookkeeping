@@ -14,6 +14,7 @@ import StyledModal from '../molecules/StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
 import { removeTimeFromDate } from '../../Utils';
+import WarningIcon from '@mui/icons-material/Warning';
 
 type ApplyIncomingPaymentModalProps = {
   onClose: () => void;
@@ -107,7 +108,9 @@ export default function ApplyIncomingPaymentModal(props: ApplyIncomingPaymentMod
               <MenuItem value=""></MenuItem>
               {props.categories.map((r: Category) => (
                 <MenuItem value={r.id} key={r.id}>
-                  {r.summary}
+                  <Stack direction="row" alignContent="center" justifyContent="space-between">
+                    {r.summary} {!r.isActive && <WarningIcon />}
+                  </Stack>
                 </MenuItem>
               ))}
             </Select>

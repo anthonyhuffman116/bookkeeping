@@ -8,5 +8,5 @@ Route.post('categories', async ({ request }) => {
 });
 
 Route.get('categories', async () => {
-  return Database.from('categories').select('*').where('isActive', true).orderBy('summary', 'asc');
+  return Database.from('categories').select('*').orderBy('summary', 'asc');
 });
