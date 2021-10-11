@@ -1,5 +1,24 @@
 const { join } = require('path');
 const Encore = require('@symfony/webpack-encore');
+const dotenv = require('dotenv');
+
+Encore.configureDefinePlugin((options) => {
+  const dotenvEnv = dotenv.config();
+
+  if (dotenvEnv.error) {
+    throw dotenvEnv.error;
+  }
+
+  const env = { ...dotenvEnv.parsed, ...process.env };
+
+  Object.keys(env).forEach((key) => {
+    if (key.toString().startsWith('REACT_APP_')) {
+      options['process.env'][key] = JSON.stringify(env[key]);
+    }
+  });
+});
+
+Encore.enableReactPreset();
 
 /*
 |--------------------------------------------------------------------------

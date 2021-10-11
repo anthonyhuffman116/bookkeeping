@@ -36,4 +36,6 @@ export default Env.rules({
   FINTS_PIN: Env.schema.string(),
   FINTS_BLZ: Env.schema.string(),
   FINTS_PRODUCT_ID: Env.schema.string(),
+  REACT_APP_SUPABASE_URL: Env.schema.string(),
+  REACT_APP_SUPABASE_KEY: Env.schema.string(),
 });
