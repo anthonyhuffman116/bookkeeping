@@ -34,12 +34,6 @@ const sumFilteredBy = (
 };
 
 export default function ReportForecast(props: ReportForecastProps) {
-  const filtered = props.categories.filter((x) => x.remaining && x.remaining < 0);
-
-  filtered.forEach((c) => {
-    console.log(c.summary, c.remaining);
-  });
-
   const expensesTotal = sumFilteredBy(props.categories, (x) => x.expectedAmount < 0, sumTotal);
   const earningsTotal = sumFilteredBy(props.categories, (x) => x.expectedAmount > 0, sumTotal);
   const expensesRemaining = sumFilteredBy(
