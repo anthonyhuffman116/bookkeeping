@@ -17,7 +17,6 @@ import {
   ThemeProvider,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { LocalizationProvider } from '@mui/lab';
@@ -51,13 +50,10 @@ function ListItemLink(props) {
 export default function App() {
   const [user, setUser] = useState<null | User>(null);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   useEffect(() => {
     const session = supabase.auth.session();
     setUser(session?.user ?? null);
-
-    console.log(session?.user);
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
@@ -72,15 +68,14 @@ export default function App() {
     supabase.auth.signOut().catch(console.error);
   };
 
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: prefersDarkMode ? 'dark' : 'light',
-        },
-      }),
-    [prefersDarkMode]
-  );
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#6489E8',
+      },
+      mode: 'dark',
+    },
+  });
 
   return (
     <ThemeProvider theme={theme}>
