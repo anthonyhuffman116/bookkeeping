@@ -119,7 +119,7 @@ export default function App() {
               </AppBar>
             </Box>
 
-            <Container maxWidth="xl">
+            <Container maxWidth={false}>
               <Switch>
                 <Route path="/payments">
                   <PaymentsPage />

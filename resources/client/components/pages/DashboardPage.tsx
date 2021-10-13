@@ -91,7 +91,7 @@ export default function DashboardPage() {
         <h1>Dashboard</h1>
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid item md={12} lg={6}>
             <Stack>
               <Stack direction="row" justifyContent="space-between" alignContent="baseline">
                 <h2>New payments</h2>
@@ -106,8 +106,18 @@ export default function DashboardPage() {
                 categories={categories}
               />
             </Stack>
+            <Stack>
+              <Stack direction="row" justifyContent="space-between" alignContent="baseline">
+                <h2>Budget</h2>
+                <Button component={Link} to="/categories" variant="text">
+                  setup categories
+                </Button>
+              </Stack>
+
+              <ReportByCategory isFetching={isFetchingReportCategories} />
+            </Stack>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item md={12} lg={6}>
             <Stack>
               <Stack>
                 <h2>Balances</h2>
@@ -116,16 +126,6 @@ export default function DashboardPage() {
               <Stack>
                 <h2>Forecast</h2>
                 <ReportForecast isFetching={isFetchingReportCategories} />
-              </Stack>
-              <Stack>
-                <Stack direction="row" justifyContent="space-between" alignContent="baseline">
-                  <h2>Budget</h2>
-                  <Button component={Link} to="/categories" variant="text">
-                    setup categories
-                  </Button>
-                </Stack>
-
-                <ReportByCategory isFetching={isFetchingReportCategories} />
               </Stack>
             </Stack>
           </Grid>
