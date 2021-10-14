@@ -8,12 +8,19 @@ import ReportForecast from '../templates/ReportForecast';
 import { calculateBudget } from '../../CategoryBudget';
 import { Link } from 'react-router-dom';
 import PageRoot from '../atoms/PageRoot';
+import BalancesGraph from '../templates/BalancesGraph';
 
 export const CategoryBudgetContext = createContext<CategoryBudget[]>([]);
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
     data.map((x) => ({ ...x, dueDate: x.dueDate ? new Date(x.dueDate) : null }))
+  );
+};
+
+const loadBalances = () => {
+  return useFetch<Balance[]>('/balances').then((data) =>
+    data.map((x) => ({ ...x, bookingDate: new Date(x.bookingDate) }))
   );
 };
 
@@ -34,9 +41,18 @@ const loadReportCategories = (from: Date, to: Date) => {
 export default function DashboardPage() {
   const from = beginOfMonth(new Date());
   const to = endOfMonth(new Date());
-  const [isFetchingReportCategories, setIsFetchingReportCategories] = useState<boolean>(true);
+
+  const d = new Date();
+  d.setMonth(d.getMonth() - 12);
+  const balancesGraphStartDate = beginOfMonth(d);
+
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const [isFetchingReportCategories, setIsFetchingReportCategories] = useState<boolean>(true);
   const [reportCategories, setReportCategories] = useState<CategoryBudget[]>([]);
+
+  const [isFetchingBalances, setIsFetchingBalances] = useState<boolean>(true);
+  const [balances, setBalances] = useState<Balance[]>([]);
 
   const refreshCategories = () => {
     loadCategories().then((data) => {
@@ -53,9 +69,19 @@ export default function DashboardPage() {
     });
   };
 
+  const refreshBalances = () => {
+    setIsFetchingBalances(true);
+
+    loadBalances().then((x) => {
+      setBalances(x);
+      setIsFetchingBalances(false);
+    });
+  };
+
   useEffect(() => {
     refreshCategories();
     refreshReportCategories();
+    refreshBalances();
   }, []);
 
   const handleCategoryCreated = (category: Category) => {
@@ -92,6 +118,14 @@ export default function DashboardPage() {
 
         <Grid container spacing={2}>
           <Grid item md={12} lg={6}>
+            <Stack>
+              <h2>Balances</h2>
+              <BalancesGraph
+                isFetching={isFetchingBalances}
+                balances={balances}
+                startDate={balancesGraphStartDate}
+              />
+            </Stack>
             <Stack>
               <Stack direction="row" justifyContent="space-between" alignContent="baseline">
                 <h2>New payments</h2>

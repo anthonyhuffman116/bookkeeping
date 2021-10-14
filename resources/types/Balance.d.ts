@@ -1,6 +1,6 @@
 type Balance = {
   iban: string;
-  account: string;
+  account: null | string;
   bookingDate: Date;
   amount: number;
 };
