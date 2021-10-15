@@ -1,9 +1,11 @@
 import { DateTime } from 'luxon';
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm';
-import Category from './Category';
-import Transaction from './Transaction';
+import CategoryModel from './CategoryModel';
+import TransactionModel from './TransactionModel';
 
-export default class Payment extends BaseModel {
+export default class PaymentModel extends BaseModel {
+  public static table = 'payments';
+
   @column({ isPrimary: true })
   public id: string;
 
@@ -19,14 +21,14 @@ export default class Payment extends BaseModel {
   @column({ columnName: 'categoryId', serializeAs: 'categoryId' })
   public categoryId: string;
 
-  @belongsTo(() => Category)
-  public category: BelongsTo<typeof Category>;
+  @belongsTo(() => CategoryModel)
+  public category: BelongsTo<typeof CategoryModel>;
 
   @column({ columnName: 'incomingPaymentId', serializeAs: 'incomingPaymentId' })
   public incomingPaymentId: string;
 
-  @belongsTo(() => Transaction, { foreignKey: 'incomingPaymentId' })
-  public transaction: BelongsTo<typeof Transaction>;
+  @belongsTo(() => TransactionModel, { foreignKey: 'incomingPaymentId' })
+  public transaction: BelongsTo<typeof TransactionModel>;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;

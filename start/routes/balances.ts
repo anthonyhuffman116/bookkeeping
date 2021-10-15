@@ -1,10 +1,10 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Balance from 'App/Models/Balance';
+import BalanceModel from 'App/Models/BalanceModel';
 
 Route.get('balances/:iban', async ({ request }) => {
   const iban = request.params().iban;
 
-  return await Balance.query()
+  return await BalanceModel.query()
     .whereHas('account', (accountQuery) => {
       accountQuery.where('iban', iban);
     })

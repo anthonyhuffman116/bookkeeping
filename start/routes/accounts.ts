@@ -1,6 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Account from 'App/Models/Account';
+import AccountModel from 'App/Models/AccountModel';
 
 Route.get('accounts', async () => {
-  return await Account.query();
+  return await AccountModel.query();
 });

@@ -1,6 +1,6 @@
 import { BaseCommand } from '@adonisjs/core/build/standalone';
 import { DateTime } from 'luxon';
-import Balance from 'App/Models/Balance';
+import BalanceModel from 'App/Models/BalanceModel';
 import {
   PinTanClient,
   SEPAAccount,
@@ -9,7 +9,7 @@ import {
   Transaction as SEPATransaction,
 } from 'fints';
 import { v4 as uuid4v } from 'uuid';
-import Transaction from 'App/Models/Transaction';
+import TransactionModel from 'App/Models/TransactionModel';
 
 function removeTimeFromDate(date: Date): Date {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -90,14 +90,14 @@ export default class FinTs extends BaseCommand {
   private async insertTransactionsIntoDatabase(
     account: SEPAAccount,
     transactions: SEPATransaction[]
-  ): Promise<Transaction[]> {
+  ): Promise<TransactionModel[]> {
     return await Promise.all(
       transactions.map(async (t: SEPATransaction) => {
         const bookingDate: Date = removeTimeFromDate(new Date(t.valueDate));
         const summary = t.descriptionStructured?.reference.text ?? '';
         const amount = Math.ceil((t.isCredit ? t.amount : t.amount * -1) * 100);
 
-        return await Transaction.updateOrCreate(
+        return await TransactionModel.updateOrCreate(
           {
             bookingDate: DateTime.fromJSDate(bookingDate),
             name: t.descriptionStructured?.name ?? '',
@@ -116,10 +116,10 @@ export default class FinTs extends BaseCommand {
     );
   }
 
-  private async insertBalanceIntoDatabase(balance: SEPABalance): Promise<Balance> {
+  private async insertBalanceIntoDatabase(balance: SEPABalance): Promise<BalanceModel> {
     console.log(`inserting balance ${balance.bookedBalance * 100} for ${balance.account.iban}`);
 
-    return await Balance.create({
+    return await BalanceModel.create({
       id: uuid4v(),
       bookingDate: DateTime.now(),
       accountIban: balance.account.iban,

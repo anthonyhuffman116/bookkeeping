@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
 
-export default class Account extends BaseModel {
+export default class AccountModel extends BaseModel {
+  public static table = 'accounts';
+
   @column({ isPrimary: true })
   public iban: string;
 

@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon';
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm';
-import Account from './Account';
+import AccountModel from './AccountModel';
 
-export default class Transaction extends BaseModel {
+export default class TransactionModel extends BaseModel {
+  public static table = 'transactions';
+
   @column({ isPrimary: true })
   public id: string;
 
@@ -21,8 +23,8 @@ export default class Transaction extends BaseModel {
   @column()
   public ack: boolean = false;
 
-  @belongsTo(() => Account, { foreignKey: 'accountIban' })
-  public account: BelongsTo<typeof Account>;
+  @belongsTo(() => AccountModel, { foreignKey: 'accountIban' })
+  public account: BelongsTo<typeof AccountModel>;
 
   @column.dateTime({ columnName: 'bookingDate', serializeAs: 'bookingDate' })
   public bookingDate: DateTime;

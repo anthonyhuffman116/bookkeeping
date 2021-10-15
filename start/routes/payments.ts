@@ -1,9 +1,9 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Payment from 'App/Models/Payment';
-import Transaction from 'App/Models/Transaction';
+import PaymentModel from 'App/Models/PaymentModel';
+import TransactionModel from 'App/Models/TransactionModel';
 
 Route.get('payments', async () => {
-  return await Payment.query()
+  return await PaymentModel.query()
     .orderBy('bookingDate', 'desc')
     .preload('category')
     .preload('transaction');
@@ -13,11 +13,11 @@ Route.post('payments', async ({ request, response }) => {
   const payment = request.body();
   delete payment.transaction;
 
-  const transaction = await Transaction.findOrFail(payment.incomingPaymentId);
+  const transaction = await TransactionModel.findOrFail(payment.incomingPaymentId);
   transaction.ack = true;
   transaction.save();
 
-  await Payment.create(payment);
+  await PaymentModel.create(payment);
 
   response.status(201);
 

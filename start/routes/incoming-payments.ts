@@ -1,8 +1,8 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Transaction from 'App/Models/Transaction';
+import TransactionModel from 'App/Models/TransactionModel';
 
 Route.get('incoming-payments', async () => {
-  return await Transaction.query()
+  return await TransactionModel.query()
     .where('ack', false)
     .orderBy('bookingDate', 'desc')
     .preload('account');
