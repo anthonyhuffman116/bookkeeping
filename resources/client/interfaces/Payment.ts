@@ -1,4 +1,7 @@
-type Payment = {
+import Category from './Category';
+import IncomingPayment from './IncomingPayment';
+
+export default interface Payment {
   id: string;
   bookingDate: Date;
   summary: string;
@@ -6,8 +9,8 @@ type Payment = {
   incomingPaymentId: string;
   categoryId: null | string;
   transaction: null | IncomingPayment;
-};
+}
 
-type AppliedPayment = Payment & {
+export interface AppliedPayment extends Payment {
   category: Category;
-};
+}

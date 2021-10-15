@@ -3,6 +3,7 @@ import { useFetch } from '../../Utils';
 import CategoriesList from '../templates/CategoriesList';
 import IsFetching from '../atoms/IsFetching';
 import PageRoot from '../atoms/PageRoot';
+import Category from 'resources/client/interfaces/Category';
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>

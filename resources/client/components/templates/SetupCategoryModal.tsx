@@ -14,6 +14,8 @@ import StyledModal from '../molecules/StyledModal';
 import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
 import { beginOfMonth, removeTimeFromDate } from '../../Utils';
+import IncomingPayment from 'resources/client/interfaces/IncomingPayment';
+import Category from 'resources/client/interfaces/Category';
 
 type SetupCategoryModalProps = {
   onClose: () => void;

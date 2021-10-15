@@ -4,6 +4,7 @@ import IsFetching from '../atoms/IsFetching';
 import { Line } from 'react-chartjs-2';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { formatDate } from '../../Utils';
+import Balance from '../../interfaces/Balance';
 
 const colors = [
   '#4fc3f7',

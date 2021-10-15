@@ -8,6 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import Account from '../../interfaces/Account';
 import React from 'react';
 
 type AccountSelectProps = {

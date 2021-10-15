@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AppliedPayment } from 'resources/client/interfaces/Payment';
 import { useFetch } from '../../Utils';
 import IsFetching from '../atoms/IsFetching';
 import PageRoot from '../atoms/PageRoot';

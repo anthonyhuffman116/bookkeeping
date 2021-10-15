@@ -8,6 +8,7 @@ import {
   TableBody,
 } from '@mui/material';
 import React, { useContext } from 'react';
+import CategoryBudget from 'resources/client/interfaces/CategoryBudget';
 import AmountChip from '../atoms/AmountChip';
 import IsFetching from '../atoms/IsFetching';
 import Empty from '../molecules/Empty';

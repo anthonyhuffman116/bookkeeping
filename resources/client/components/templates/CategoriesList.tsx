@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
+import Category from 'resources/client/interfaces/Category';
 import { formatDate } from '../../Utils';
 import AmountChip from '../atoms/AmountChip';
 import IsFetching from '../atoms/IsFetching';

@@ -17,6 +17,11 @@ import { Link } from 'react-router-dom';
 import PageRoot from '../atoms/PageRoot';
 import BalancesGraph from '../templates/BalancesGraph';
 import AccountSelect from '../molecules/AccountSelect';
+import Account from '../../interfaces/Account';
+import Balance from '../../interfaces/Balance';
+import CategoryBudget from 'resources/client/interfaces/CategoryBudget';
+import Category from 'resources/client/interfaces/Category';
+import Payment from 'resources/client/interfaces/Payment';
 
 export const CategoryBudgetContext = createContext<CategoryBudget[]>([]);
 

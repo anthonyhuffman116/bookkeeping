@@ -1,4 +1,4 @@
-type CategoryBudget = {
+export default interface CategoryBudget {
   id: string;
   summary: string;
   expectedAmount: number;
@@ -7,4 +7,4 @@ type CategoryBudget = {
   dueDate: null | Date;
   remaining: null | number;
   percentage: null | number;
-};
+}

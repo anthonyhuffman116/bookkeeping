@@ -6,6 +6,9 @@ import IsFetching from '../atoms/IsFetching';
 import ApplyIncomingPaymentModal from './ApplyIncomingPaymentModal';
 import IncomingPaymentCard from './IncomingPaymentCard';
 import SetupIntervalModal from './SetupCategoryModal';
+import IncomingPayment from 'resources/client/interfaces/IncomingPayment';
+import Category from 'resources/client/interfaces/Category';
+import Payment from 'resources/client/interfaces/Payment';
 
 const loadIncomingPayments = () => {
   return useFetch<IncomingPayment[]>('/incoming-payments').then((data) =>

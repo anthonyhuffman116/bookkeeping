@@ -15,6 +15,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { DatePicker } from '@mui/lab';
 import { removeTimeFromDate } from '../../Utils';
 import WarningIcon from '@mui/icons-material/Warning';
+import Category from 'resources/client/interfaces/Category';
+import IncomingPayment from 'resources/client/interfaces/IncomingPayment';
+import Payment from 'resources/client/interfaces/Payment';
 
 type ApplyIncomingPaymentModalProps = {
   onClose: () => void;

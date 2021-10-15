@@ -1,4 +1,4 @@
-type IncomingPayment = {
+export default interface IncomingPayment {
   id: number;
   name: string;
   summary: string;
@@ -6,4 +6,4 @@ type IncomingPayment = {
   amount: number;
   ack: boolean;
   bookingDate: Date;
-};
+}

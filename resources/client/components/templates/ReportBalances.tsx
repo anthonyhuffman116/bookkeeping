@@ -1,5 +1,6 @@
 import { Card, Typography, Grid, Divider, Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import Balance from '../../interfaces/Balance';
 import { formatDate, useFetch } from '../../Utils';
 import AmountChip from '../atoms/AmountChip';
 import IsFetching from '../atoms/IsFetching';

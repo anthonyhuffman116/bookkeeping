@@ -4,6 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import WarningIcon from '@mui/icons-material/Warning';
 import React from 'react';
 import CircularProgressWithLabel from '../molecules/CircularProgressWithLabel';
+import CategoryBudget from 'resources/client/interfaces/CategoryBudget';
 
 type ReportByCategoryItemProps = {
   item: CategoryBudget;

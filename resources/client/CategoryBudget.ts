@@ -1,3 +1,5 @@
+import CategoryBudget from './interfaces/CategoryBudget';
+
 function calculateRemainingEarnings(expected: number, actual: number): number {
   if (actual > 0) {
     return expected - actual;

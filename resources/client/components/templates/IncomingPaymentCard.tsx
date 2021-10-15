@@ -3,6 +3,7 @@ import React from 'react';
 import { formatDate } from '../../Utils';
 import AmountChip from '../atoms/AmountChip';
 import ArrowRight from '@mui/icons-material/ArrowRight';
+import IncomingPayment from 'resources/client/interfaces/IncomingPayment';
 
 type IncomingPaymentCardProps = {
   incomingPayment: IncomingPayment;
