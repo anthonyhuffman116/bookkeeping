@@ -109,7 +109,7 @@ export default class FinTs extends BaseCommand {
             name: t.descriptionStructured?.name ?? '',
             summary,
             amount,
-            accountName: account.iban,
+            accountIban: account.iban,
           }
         );
       })
@@ -122,7 +122,7 @@ export default class FinTs extends BaseCommand {
     return await Balance.create({
       id: uuid4v(),
       bookingDate: DateTime.now(),
-      accountName: balance.account.iban,
+      accountIban: balance.account.iban,
       amount: Math.floor(balance.bookedBalance * 100),
     });
   }

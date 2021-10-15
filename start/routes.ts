@@ -26,6 +26,7 @@ import './routes/payments';
 import './routes/categories';
 import './routes/reports';
 import './routes/balances';
+import './routes/accounts';
 
 Route.get('*', async ({ view }: HttpContextContract) => {
   return view.render('index');

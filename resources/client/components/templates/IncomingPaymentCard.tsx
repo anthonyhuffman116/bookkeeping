@@ -13,7 +13,7 @@ type IncomingPaymentCardProps = {
 export default function IncomingPaymentCard(props: IncomingPaymentCardProps) {
   const additionalInformation = [
     props.incomingPayment.summary,
-    props.incomingPayment.accountName,
+    props.incomingPayment.accountIban,
     formatDate(props.incomingPayment.bookingDate),
   ];
 
@@ -50,9 +50,9 @@ export default function IncomingPaymentCard(props: IncomingPaymentCardProps) {
           {props.incomingPayment.name}
         </Typography>
 
-        {props.incomingPayment.accountName && (
+        {props.incomingPayment.accountIban && (
           <Typography sx={{ fontSize: 12 }} color="text.secondary">
-            {props.incomingPayment.accountName}
+            {props.incomingPayment.accountIban}
           </Typography>
         )}
 

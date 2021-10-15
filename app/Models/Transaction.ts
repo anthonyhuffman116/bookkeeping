@@ -12,8 +12,8 @@ export default class Transaction extends BaseModel {
   @column()
   public summary: string;
 
-  @column({ columnName: 'account', serializeAs: 'accountName' })
-  public accountName: string;
+  @column({ columnName: 'account', serializeAs: 'accountIban' })
+  public accountIban: string;
 
   @column()
   public amount: number;
@@ -21,7 +21,7 @@ export default class Transaction extends BaseModel {
   @column()
   public ack: boolean = false;
 
-  @belongsTo(() => Account, { foreignKey: 'accountName' })
+  @belongsTo(() => Account, { foreignKey: 'accountIban' })
   public account: BelongsTo<typeof Account>;
 
   @column.dateTime({ columnName: 'bookingDate', serializeAs: 'bookingDate' })

@@ -1,7 +1,14 @@
 import { Button, Grid, Stack } from '@mui/material';
 import React, { createContext, useEffect, useState } from 'react';
 import IncomingPaymentsList from '../templates/IncomingPaymentsList';
-import { beginOfMonth, endOfMonth, formatDate, useFetch } from '../../Utils';
+import {
+  beginOfMonth,
+  endOfMonth,
+  formatDate,
+  getLocalStorage,
+  setLocalStorage,
+  useFetch,
+} from '../../Utils';
 import ReportByCategory from '../templates/ReportByCategory';
 import ReportBalances from '../templates/ReportBalances';
 import ReportForecast from '../templates/ReportForecast';
@@ -9,8 +16,13 @@ import { calculateBudget } from '../../CategoryBudget';
 import { Link } from 'react-router-dom';
 import PageRoot from '../atoms/PageRoot';
 import BalancesGraph from '../templates/BalancesGraph';
+import AccountSelect from '../molecules/AccountSelect';
 
 export const CategoryBudgetContext = createContext<CategoryBudget[]>([]);
+
+const loadAccounts = () => {
+  return useFetch<Account[]>('/accounts');
+};
 
 const loadCategories = () => {
   return useFetch<Category[]>('/categories').then((data) =>
@@ -18,8 +30,8 @@ const loadCategories = () => {
   );
 };
 
-const loadBalances = () => {
-  return useFetch<Balance[]>('/balances').then((data) =>
+const loadBalances = (iban: string) => {
+  return useFetch<Balance[]>('/balances/' + iban).then((data) =>
     data.map((x) => ({ ...x, bookingDate: new Date(x.bookingDate) }))
   );
 };
@@ -54,6 +66,11 @@ export default function DashboardPage() {
   const [isFetchingBalances, setIsFetchingBalances] = useState<boolean>(true);
   const [balances, setBalances] = useState<Balance[]>([]);
 
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accountForBalances, setAccountForBalances] = useState<Account | null>(
+    getLocalStorage<Account | null>('accountForBalances', () => null)
+  );
+
   const refreshCategories = () => {
     loadCategories().then((data) => {
       setCategories(data);
@@ -69,20 +86,28 @@ export default function DashboardPage() {
     });
   };
 
-  const refreshBalances = () => {
+  const refreshBalances = (iban: string) => {
     setIsFetchingBalances(true);
 
-    loadBalances().then((x) => {
+    loadBalances(iban).then((x) => {
       setBalances(x);
       setIsFetchingBalances(false);
     });
   };
 
   useEffect(() => {
+    loadAccounts().then((accounts: Account[]) => {
+      setAccounts(accounts);
+      !accountForBalances && setAccountForBalances(accounts[0]);
+    });
+
     refreshCategories();
     refreshReportCategories();
-    refreshBalances();
   }, []);
+
+  useEffect(() => {
+    accountForBalances && refreshBalances(accountForBalances?.iban);
+  }, [accountForBalances]);
 
   const handleCategoryCreated = (category: Category) => {
     setCategories([category, ...categories]);
@@ -119,7 +144,18 @@ export default function DashboardPage() {
         <Grid container spacing={2}>
           <Grid item md={12} lg={6}>
             <Stack>
-              <h2>Balance history</h2>
+              <Stack direction="row" justifyContent="space-between" alignItems="baseline">
+                <h2>Balance history</h2>
+                <AccountSelect
+                  items={accounts}
+                  onSelect={(a) => {
+                    setAccountForBalances(a);
+                    setLocalStorage<Account>('accountForBalances', a);
+                  }}
+                  value={accountForBalances}
+                />
+              </Stack>
+
               <BalancesGraph
                 isFetching={isFetchingBalances}
                 balances={balances}

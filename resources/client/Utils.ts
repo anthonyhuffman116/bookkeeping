@@ -29,3 +29,17 @@ export function usePostFetch<T>(url: string, data: any, options: any = {}): Prom
     body: JSON.stringify(data),
   });
 }
+
+export function setLocalStorage<T>(key: string, value: T) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+export function getLocalStorage<T>(key: string, or: () => T): T {
+  const value = localStorage.getItem(key);
+
+  if (value === null) {
+    return or();
+  }
+
+  return JSON.parse(value) as T;
+}
