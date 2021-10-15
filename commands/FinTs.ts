@@ -1,15 +1,19 @@
 import { BaseCommand } from '@adonisjs/core/build/standalone';
-import Database from '@ioc:Adonis/Lucid/Database';
-import { PinTanClient, SEPAAccount, Balance as SEPABalance, Statement, Transaction } from 'fints';
+import { DateTime } from 'luxon';
+import Balance from 'App/Models/Balance';
+import {
+  PinTanClient,
+  SEPAAccount,
+  Balance as SEPABalance,
+  Statement,
+  Transaction as SEPATransaction,
+} from 'fints';
 import { v4 as uuid4v } from 'uuid';
+import Transaction from 'App/Models/Transaction';
 
 function removeTimeFromDate(date: Date): Date {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 }
-
-type InsertResult = {
-  rowCount: number;
-};
 
 export default class FinTs extends BaseCommand {
   /**
@@ -61,13 +65,12 @@ export default class FinTs extends BaseCommand {
     await Promise.all(
       accounts.map(async (account: SEPAAccount) => {
         const transactions = await this.getTransactions(client, account, startDate, endDate);
-        const affected = await Promise.all(
-          this.insertTransactionsIntoDatabase(account, transactions)
-        );
-        const rowCount = affected.reduce<number>((a, x) => a + x.rowCount, 0);
+        const affected = await this.insertTransactionsIntoDatabase(account, transactions);
 
         // TODO: report newly transmitted transactions to Discord also
-        console.log(`import completed: ${rowCount} transactions processed for ${account.iban}`);
+        console.log(
+          `import completed: ${affected.length} transactions processed for ${account.iban}`
+        );
       })
     );
 
@@ -79,51 +82,48 @@ export default class FinTs extends BaseCommand {
     account: SEPAAccount,
     startDate: Date,
     endDate: Date
-  ): Promise<Transaction[]> {
+  ): Promise<SEPATransaction[]> {
     const statements = await client.statements(account, startDate, endDate);
     return statements.map((s: Statement) => s.transactions).flat();
   }
 
-  private insertTransactionsIntoDatabase(
+  private async insertTransactionsIntoDatabase(
     account: SEPAAccount,
-    transactions: Transaction[]
-  ): Promise<InsertResult>[] {
-    return transactions.map((t: Transaction) => {
-      const bookingDate: Date = removeTimeFromDate(new Date(t.valueDate));
-      const summary = t.descriptionStructured?.reference.text ?? '';
-      const amount = Math.ceil((t.isCredit ? t.amount : t.amount * -1) * 100);
+    transactions: SEPATransaction[]
+  ): Promise<Transaction[]> {
+    return await Promise.all(
+      transactions.map(async (t: SEPATransaction) => {
+        const bookingDate: Date = removeTimeFromDate(new Date(t.valueDate));
+        const summary = t.descriptionStructured?.reference.text ?? '';
+        const amount = Math.ceil((t.isCredit ? t.amount : t.amount * -1) * 100);
 
-      return Database.rawQuery<InsertResult>(
-        `INSERT INTO transactions ("bookingDate", name, summary, amount, account, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT ON CONSTRAINT transactions_unique DO NOTHING`,
-        [
-          bookingDate,
-          t.descriptionStructured?.name ?? '',
-          summary,
-          amount,
-          account.iban,
-          new Date(),
-          new Date(),
-        ]
-      ).exec();
-    });
+        return await Transaction.updateOrCreate(
+          {
+            bookingDate: DateTime.fromJSDate(bookingDate),
+            name: t.descriptionStructured?.name ?? '',
+            summary,
+          },
+          {
+            id: uuid4v(),
+            bookingDate: DateTime.fromJSDate(bookingDate),
+            name: t.descriptionStructured?.name ?? '',
+            summary,
+            amount,
+            accountName: account.iban,
+          }
+        );
+      })
+    );
   }
 
-  private insertBalanceIntoDatabase(balance: SEPABalance): Promise<InsertResult> {
+  private async insertBalanceIntoDatabase(balance: SEPABalance): Promise<Balance> {
     console.log(`inserting balance ${balance.bookedBalance * 100} for ${balance.account.iban}`);
 
-    return Database.rawQuery<InsertResult>(
-      `INSERT INTO balances (id, "bookingDate", account, amount, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?)`,
-      [
-        uuid4v(),
-        new Date(),
-        balance.account.iban,
-        Math.floor(balance.bookedBalance * 100),
-        new Date(),
-        new Date(),
-      ]
-    ).exec();
+    return await Balance.create({
+      id: uuid4v(),
+      bookingDate: DateTime.now(),
+      accountName: balance.account.iban,
+      amount: Math.floor(balance.bookedBalance * 100),
+    });
   }
 }

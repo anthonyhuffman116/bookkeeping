@@ -11,8 +11,8 @@ type PaymentCardProps = {
 export default function PaymentCard(props: PaymentCardProps) {
   let detailsLink = <></>;
 
-  if (props.payment.transactionName.startsWith('AMAZON')) {
-    const orderId = props.payment.transactionSummary.split(' ')[0];
+  if (props.payment.transaction?.name.startsWith('AMAZON')) {
+    const orderId = props.payment.transaction?.summary.split(' ')[0];
     detailsLink = (
       <Button
         href={
@@ -31,7 +31,7 @@ export default function PaymentCard(props: PaymentCardProps) {
         <Stack direction="row" alignItems="end" justifyContent="space-between">
           <Stack>
             <Typography variant="h6" component="div">
-              {props.payment.category}
+              {props.payment.category.summary}
             </Typography>
 
             <Typography sx={{ fontSize: 14 }} component="div">

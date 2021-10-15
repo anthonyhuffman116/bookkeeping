@@ -1,12 +1,12 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Database from '@ioc:Adonis/Lucid/Database';
+import Category from 'App/Models/Category';
 
 Route.post('categories', async ({ request }) => {
-  await Database.table('categories').insert(request.body());
+  await Category.updateOrCreate(request.body(), request.body());
 
   return request.body();
 });
 
 Route.get('categories', async () => {
-  return Database.from('categories').select('*').orderBy('summary', 'asc');
+  return await Category.query().orderBy('summary');
 });

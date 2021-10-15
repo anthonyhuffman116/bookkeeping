@@ -2,9 +2,8 @@ type IncomingPayment = {
   id: number;
   name: string;
   summary: string;
-  account: string;
+  accountName: null | string;
   amount: number;
   ack: boolean;
   bookingDate: Date;
-  account: null | string;
 };

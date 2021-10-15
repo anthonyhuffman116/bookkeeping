@@ -48,8 +48,7 @@ export default function ApplyIncomingPaymentModal(props: ApplyIncomingPaymentMod
       amount: amount,
       incomingPaymentId: props.incomingPayment?.id.toString() ?? '',
       categoryId: categoryId,
-      transactionSummary: props.incomingPayment!!.summary,
-      transactionName: props.incomingPayment!!.name,
+      transaction: props.incomingPayment,
     });
   };
 

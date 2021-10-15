@@ -119,7 +119,7 @@ export default function DashboardPage() {
         <Grid container spacing={2}>
           <Grid item md={12} lg={6}>
             <Stack>
-              <h2>Balances</h2>
+              <h2>Balance history</h2>
               <BalancesGraph
                 isFetching={isFetchingBalances}
                 balances={balances}

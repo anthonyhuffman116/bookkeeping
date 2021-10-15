@@ -42,26 +42,26 @@ const balancesToGraphData = (balances: Balance[], minDate: Date): ChartDataset[]
     byMonth.set(key, [...existing, x]);
   });
 
-  return Array.from(byMonth).map(([key, balances], index): ChartDataset => {
-    const data = new Array(31);
+  return Array.from(byMonth)
+    .map(([key, balances], index): ChartDataset => {
+      const data = new Array(31);
 
-    console.log(balances);
+      balances.forEach((x: Balance) => {
+        const index = x.bookingDate.getDate() - 1;
+        data[index] = x.amount / 100;
+      });
 
-    balances.forEach((x: Balance) => {
-      const index = x.bookingDate.getDate() - 1;
-      data[index] = x.amount / 100;
-    });
+      const color = colors[index];
 
-    const color = colors[index];
-
-    return {
-      label: key,
-      data: data,
-      fill: false,
-      backgroundColor: color,
-      borderColor: color,
-    };
-  });
+      return {
+        label: key,
+        data: data,
+        fill: false,
+        backgroundColor: color,
+        borderColor: color,
+      };
+    })
+    .reverse();
 };
 
 type BalancesGraphProps = {

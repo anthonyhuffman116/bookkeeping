@@ -15,7 +15,7 @@ export default function IncomingPaymentsList(props: PaymentsListProps) {
       <Empty items={props.payments} text="There are no payments.">
         <Stack spacing={1}>
           {props.payments.map((payment: AppliedPayment) => (
-            <PaymentCard payment={payment} />
+            <PaymentCard payment={payment} key={payment.id} />
           ))}
         </Stack>
       </Empty>

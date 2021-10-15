@@ -1,10 +1,9 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Database from '@ioc:Adonis/Lucid/Database';
+import Transaction from 'App/Models/Transaction';
 
 Route.get('incoming-payments', async () => {
-  return Database.from('transactions')
-    .select('transactions.*', 'accounts.name AS account')
-    .leftJoin('accounts', 'iban', 'account')
+  return await Transaction.query()
     .where('ack', false)
-    .orderBy('bookingDate', 'desc');
+    .orderBy('bookingDate', 'desc')
+    .preload('account');
 });

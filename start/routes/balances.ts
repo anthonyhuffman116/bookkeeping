@@ -1,10 +1,12 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Database from '@ioc:Adonis/Lucid/Database';
+import Balance from 'App/Models/Balance';
 
 Route.get('balances', async () => {
-  return Database.from('balances')
-    .select('balances.*', 'accounts.name AS account')
-    .leftJoin('accounts', 'iban', 'account')
-    .where('accounts.name', 'Girokonto') // TODO: select via param to IBAN
-    .orderBy('bookingDate', 'desc');
+  const filter = 'Girokonto';
+
+  return await Balance.query()
+    .whereHas('account', (accountQuery) => {
+      accountQuery.where('name', filter);
+    })
+    .preload('account');
 });

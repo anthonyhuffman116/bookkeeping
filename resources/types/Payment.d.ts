@@ -5,10 +5,9 @@ type Payment = {
   amount: number;
   incomingPaymentId: string;
   categoryId: null | string;
-  transactionSummary: string;
-  transactionName: string;
+  transaction: null | IncomingPayment;
 };
 
 type AppliedPayment = Payment & {
-  category: string;
+  category: Category;
 };

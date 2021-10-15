@@ -1,26 +1,23 @@
 import Route from '@ioc:Adonis/Core/Route';
-import Database from '@ioc:Adonis/Lucid/Database';
+import Payment from 'App/Models/Payment';
+import Transaction from 'App/Models/Transaction';
 
 Route.get('payments', async () => {
-  return Database.from({ p: 'payments' })
-    .select(
-      'p.*',
-      'categories.summary AS category',
-      't.summary AS transactionSummary',
-      't.name AS transactionName'
-    )
-    .innerJoin('categories', 'categories.id', 'categoryId')
-    .innerJoin('transactions AS t', 't.id', 'incomingPaymentId')
-    .orderBy('p.bookingDate', 'desc');
+  return await Payment.query()
+    .orderBy('bookingDate', 'desc')
+    .preload('category')
+    .preload('transaction');
 });
 
 Route.post('payments', async ({ request, response }) => {
   const payment = request.body();
-  delete payment.transactionSummary;
-  delete payment.transactionName;
+  delete payment.transaction;
 
-  await Database.from('transactions').where('id', payment.incomingPaymentId).update({ ack: true });
-  await Database.table('payments').insert(payment);
+  const transaction = await Transaction.findOrFail(payment.incomingPaymentId);
+  transaction.ack = true;
+  transaction.save();
+
+  await Payment.create(payment);
 
   response.status(201);
 
