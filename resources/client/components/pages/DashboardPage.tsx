@@ -22,6 +22,7 @@ import Balance from '../../interfaces/Balance';
 import CategoryBudget from 'resources/client/interfaces/CategoryBudget';
 import Category from 'resources/client/interfaces/Category';
 import Payment from 'resources/client/interfaces/Payment';
+import WrapUpMonth from '../templates/WrapUpMonth';
 
 export const CategoryBudgetContext = createContext<CategoryBudget[]>([]);
 
@@ -141,10 +142,16 @@ export default function DashboardPage() {
     setReportCategories(newItems);
   };
 
+  const wrapUpMonth = new Date();
+  wrapUpMonth.setMonth(wrapUpMonth.getMonth() - 1);
+
   return (
     <PageRoot>
       <CategoryBudgetContext.Provider value={reportCategories}>
-        <h1>Dashboard</h1>
+        <Stack direction="row" alignItems="baseline" justifyContent="space-between">
+          <h1>Dashboard</h1>
+          <WrapUpMonth date={wrapUpMonth} onWrappedUp={refreshReportCategories} />
+        </Stack>
 
         <Grid container spacing={2}>
           <Grid item md={12} lg={6}>
