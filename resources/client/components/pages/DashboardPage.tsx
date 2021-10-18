@@ -142,15 +142,12 @@ export default function DashboardPage() {
     setReportCategories(newItems);
   };
 
-  const wrapUpMonth = new Date();
-  wrapUpMonth.setMonth(wrapUpMonth.getMonth() - 1);
-
   return (
     <PageRoot>
       <CategoryBudgetContext.Provider value={reportCategories}>
         <Stack direction="row" alignItems="baseline" justifyContent="space-between">
           <h1>Dashboard</h1>
-          <WrapUpMonth date={wrapUpMonth} onWrappedUp={refreshReportCategories} />
+          <WrapUpMonth onWrappedUp={refreshReportCategories} categories={categories} />
         </Stack>
 
         <Grid container spacing={2}>
