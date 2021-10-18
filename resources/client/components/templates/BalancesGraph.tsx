@@ -22,13 +22,11 @@ const colors = [
   '#fff9c4',
 ];
 
-const balancesToGraphData = (balances: Balance[], minDate: Date): ChartDataset[] => {
+const balancesToGraphData = (balances: Balance[]): ChartDataset[] => {
   const byMonth: Map<string, Balance[]> = new Map<string, Balance[]>();
   const byDate: Map<string, Balance> = new Map<string, Balance>();
 
-  const b = balances
-    .filter((x) => x.bookingDate >= minDate)
-    .sort((a, b) => (a.bookingDate > b.bookingDate ? 1 : -1));
+  const b = balances.sort((a, b) => (a.bookingDate > b.bookingDate ? 1 : -1));
 
   // take last booking of the day
   b.forEach((x) => {
@@ -68,13 +66,12 @@ const balancesToGraphData = (balances: Balance[], minDate: Date): ChartDataset[]
 type BalancesGraphProps = {
   isFetching: boolean;
   balances: Balance[];
-  startDate: Date;
 };
 
 export default function BalancesGraph(props: BalancesGraphProps) {
   const data: ChartData = {
     labels: Array.from({ length: 31 }, (_, i) => i + 1),
-    datasets: balancesToGraphData(props.balances, props.startDate),
+    datasets: balancesToGraphData(props.balances),
   };
 
   const options: ChartOptions = {

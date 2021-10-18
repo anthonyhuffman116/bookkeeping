@@ -23,6 +23,7 @@ import CategoryBudget from 'resources/client/interfaces/CategoryBudget';
 import Category from 'resources/client/interfaces/Category';
 import Payment from 'resources/client/interfaces/Payment';
 import WrapUpMonth from '../templates/WrapUpMonth';
+import { format } from 'date-fns';
 
 export const CategoryBudgetContext = createContext<CategoryBudget[]>([]);
 
@@ -36,10 +37,10 @@ const loadCategories = () => {
   );
 };
 
-const loadBalances = (iban: string) => {
-  return useFetch<Balance[]>('/balances/' + iban).then((data) =>
-    data.map((x) => ({ ...x, bookingDate: new Date(x.bookingDate) }))
-  );
+const loadBalances = (iban: string, from: Date, to: Date) => {
+  return useFetch<Balance[]>(
+    `/balances/${iban}/${format(from, 'yyyy-MM-dd')}/${format(to, 'yyyy-MM-dd')}`
+  ).then((data) => data.map((x) => ({ ...x, bookingDate: new Date(x.bookingDate) })));
 };
 
 const loadReportCategories = (from: Date, to: Date) => {
@@ -92,10 +93,10 @@ export default function DashboardPage() {
     });
   };
 
-  const refreshBalances = (iban: string) => {
+  const refreshBalances = (iban: string, from: Date, to: Date) => {
     setIsFetchingBalances(true);
 
-    loadBalances(iban).then((x) => {
+    loadBalances(iban, from, to).then((x) => {
       setBalances(x);
       setIsFetchingBalances(false);
     });
@@ -112,7 +113,8 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    accountForBalances && refreshBalances(accountForBalances?.iban);
+    accountForBalances &&
+      refreshBalances(accountForBalances?.iban, balancesGraphStartDate, new Date());
   }, [accountForBalances]);
 
   const handleCategoryCreated = (category: Category) => {
@@ -165,11 +167,7 @@ export default function DashboardPage() {
                 />
               </Stack>
 
-              <BalancesGraph
-                isFetching={isFetchingBalances}
-                balances={balances}
-                startDate={balancesGraphStartDate}
-              />
+              <BalancesGraph isFetching={isFetchingBalances} balances={balances} />
             </Stack>
             <Stack>
               <Stack direction="row" justifyContent="space-between" alignContent="baseline">
