@@ -18,7 +18,11 @@ type AccountSelectProps = {
 };
 
 export default function AccountSelect(props: AccountSelectProps) {
-  const value = props.value?.iban ?? props.items[0]?.iban;
+  let value: null | string = props.value?.iban ?? props.items[0]?.iban;
+
+  if (props.items.findIndex((x) => x.iban === value) === -1) {
+    value = null;
+  }
 
   const handleChange = (e: SelectChangeEvent) => {
     const account = props.items.filter((x) => x.iban == e.target.value)[0];
@@ -27,26 +31,30 @@ export default function AccountSelect(props: AccountSelectProps) {
   };
 
   return (
-    <FormControl>
-      <InputLabel id="select-account-label">Account</InputLabel>
-      <Select
-        labelId="select-account-label"
-        id="select-account"
-        value={value}
-        label="Account"
-        onChange={handleChange}
-      >
-        {props.items.map((a: Account) => (
-          <MenuItem value={a.iban} key={a.iban}>
-            <Stack direction="row" spacing={2} alignItems="baseline">
-              <Box sx={{}}>{a.name}</Box>
-              <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
-                {a.iban}
-              </Typography>
-            </Stack>
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <>
+      {value !== null && (
+        <FormControl>
+          <InputLabel id="select-account-label">Account</InputLabel>
+          <Select
+            labelId="select-account-label"
+            id="select-account"
+            value={value}
+            label="Account"
+            onChange={handleChange}
+          >
+            {props.items.map((a: Account) => (
+              <MenuItem value={a.iban} key={a.iban}>
+                <Stack direction="row" spacing={2} alignItems="baseline">
+                  <Box sx={{}}>{a.name}</Box>
+                  <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
+                    {a.iban}
+                  </Typography>
+                </Stack>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+    </>
   );
 }
