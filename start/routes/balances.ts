@@ -11,5 +11,6 @@ Route.get('balances/:iban/:from/:to', async ({ request }) => {
     .whereHas('account', (accountQuery) => {
       accountQuery.where('iban', iban);
     })
+    .orderBy('bookingDate', 'desc')
     .preload('account');
 });
