@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React from 'react';
 import { usePostFetch } from '../../Utils';
 import { format } from 'date-fns';
-import Category from 'resources/client/interfaces/Category';
+import Category from '../../interfaces/Category';
 
 const f = (date: Date) => {
   return usePostFetch<null>(`/close-month/${format(date, 'yyyy-MM')}`, {});
