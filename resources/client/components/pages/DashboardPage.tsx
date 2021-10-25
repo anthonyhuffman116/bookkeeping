@@ -39,7 +39,7 @@ const loadCategories = () => {
 
 const loadBalances = (iban: string, from: Date, to: Date) => {
   return useFetch<Balance[]>(
-    `/balances/${iban}/${format(from, 'yyyy-MM-dd')}/${format(to, 'yyyy-MM-dd')}`
+    `/balances/${iban}/${format(from, 'yyyy-MM-dd')}T00:00:00/${format(to, 'yyyy-MM-dd')}T23:59:59`
   ).then((data) => data.map((x) => ({ ...x, bookingDate: new Date(x.bookingDate) })));
 };
 
