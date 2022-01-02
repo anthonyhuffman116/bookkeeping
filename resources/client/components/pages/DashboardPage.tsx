@@ -21,9 +21,10 @@ import Account from '../../interfaces/Account';
 import Balance from '../../interfaces/Balance';
 import CategoryBudget from 'resources/client/interfaces/CategoryBudget';
 import Category from 'resources/client/interfaces/Category';
-import Payment from 'resources/client/interfaces/Payment';
 import WrapUpMonth from '../templates/WrapUpMonth';
 import { format } from 'date-fns';
+import { useQuery } from 'react-query';
+import { queryClient } from '../../App';
 
 export const CategoryBudgetContext = createContext<CategoryBudget[]>([]);
 
@@ -65,91 +66,52 @@ export default function DashboardPage() {
   d.setMonth(d.getMonth() - 12);
   const balancesGraphStartDate = beginOfMonth(d);
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { data: categories } = useQuery<Category[]>('categories', loadCategories);
 
-  const [isFetchingReportCategories, setIsFetchingReportCategories] = useState<boolean>(true);
-  const [reportCategories, setReportCategories] = useState<CategoryBudget[]>([]);
+  const { data: accounts } = useQuery<Account[], Error>('accounts', loadAccounts);
+  const { isLoading: isLoadingReportCategories, data: reportCategories } = useQuery<
+    CategoryBudget[],
+    Error
+  >('report-categories', () => loadReportCategories(from, to));
 
-  const [isFetchingBalances, setIsFetchingBalances] = useState<boolean>(true);
-  const [balances, setBalances] = useState<Balance[]>([]);
-
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [accountForBalances, setAccountForBalances] = useState<Account | null>(
     getLocalStorage<Account | null>('accountForBalances', () => null)
   );
 
-  const refreshCategories = () => {
-    loadCategories().then((data) => {
-      setCategories(data);
-    });
-  };
+  let balances: Balance[] | undefined = [];
+  let isFetchingBalances = false;
+
+  if (accountForBalances) {
+    ({ data: balances, isLoading: isFetchingBalances } = useQuery<Balance[], Error>(
+      ['balances', accountForBalances, balancesGraphStartDate],
+      () => loadBalances(accountForBalances?.iban ?? '', balancesGraphStartDate, new Date())
+    ));
+  }
 
   const refreshReportCategories = () => {
-    setIsFetchingReportCategories(true);
-
-    loadReportCategories(from, to).then((x) => {
-      setReportCategories(x);
-      setIsFetchingReportCategories(false);
-    });
-  };
-
-  const refreshBalances = (iban: string, from: Date, to: Date) => {
-    setIsFetchingBalances(true);
-
-    loadBalances(iban, from, to).then((x) => {
-      setBalances(x);
-      setIsFetchingBalances(false);
-    });
+    queryClient.invalidateQueries('report-categories');
   };
 
   useEffect(() => {
-    loadAccounts().then((accounts: Account[]) => {
-      setAccounts(accounts);
-      !accountForBalances && setAccountForBalances(accounts[0]);
-    });
+    if (!accounts) return;
 
-    refreshCategories();
-    refreshReportCategories();
-  }, []);
+    !accountForBalances && setAccountForBalances(accounts[0]);
+  }, [accounts]);
 
-  useEffect(() => {
-    accountForBalances &&
-      refreshBalances(accountForBalances?.iban, balancesGraphStartDate, new Date());
-  }, [accountForBalances]);
-
-  const handleCategoryCreated = (category: Category) => {
-    setCategories([category, ...categories]);
+  const handleCategoryCreated = () => {
+    queryClient.invalidateQueries('categories');
   };
 
-  const handleIncomingPaymentApplied = (payment: Payment) => {
-    const index = reportCategories.findIndex((b) => b.id === payment.categoryId);
-
-    if (index === -1) {
-      refreshReportCategories();
-      return;
-    }
-
-    const categoryBudget = reportCategories[index];
-
-    const newCategoryBudget: CategoryBudget = {
-      ...categoryBudget,
-      amount: (categoryBudget.amount ?? 0.0) + payment.amount,
-    };
-
-    const oldItems = reportCategories.filter((i) => i.id !== payment.categoryId);
-    const newItems = calculateBudget([...oldItems, newCategoryBudget]);
-
-    newItems.sort((a, b) => (a.summary.toLowerCase() > b.summary.toLowerCase() ? 0 : -1));
-
-    setReportCategories(newItems);
+  const handleIncomingPaymentApplied = () => {
+    queryClient.invalidateQueries('report-categories');
   };
 
   return (
     <PageRoot>
-      <CategoryBudgetContext.Provider value={reportCategories}>
+      <CategoryBudgetContext.Provider value={reportCategories ?? []}>
         <Stack direction="row" alignItems="baseline" justifyContent="space-between">
           <h1>Dashboard</h1>
-          <WrapUpMonth onWrappedUp={refreshReportCategories} categories={categories} />
+          <WrapUpMonth onWrappedUp={refreshReportCategories} categories={categories ?? []} />
         </Stack>
 
         <Grid container spacing={2}>
@@ -158,7 +120,7 @@ export default function DashboardPage() {
               <Stack direction="row" justifyContent="space-between" alignItems="baseline">
                 <h2>Balance history</h2>
                 <AccountSelect
-                  items={accounts}
+                  items={accounts ?? []}
                   onSelect={(a) => {
                     setAccountForBalances(a);
                     setLocalStorage<Account>('accountForBalances', a);
@@ -167,7 +129,7 @@ export default function DashboardPage() {
                 />
               </Stack>
 
-              <BalancesGraph isFetching={isFetchingBalances} balances={balances} />
+              <BalancesGraph isFetching={isFetchingBalances} balances={balances ?? []} />
             </Stack>
             <Stack>
               <Stack direction="row" justifyContent="space-between" alignContent="baseline">
@@ -180,7 +142,7 @@ export default function DashboardPage() {
               <IncomingPaymentsList
                 onCategoryCreated={handleCategoryCreated}
                 onIncomingPaymentApplied={handleIncomingPaymentApplied}
-                categories={categories}
+                categories={categories ?? []}
               />
             </Stack>
             <Stack>
@@ -191,7 +153,7 @@ export default function DashboardPage() {
                 </Button>
               </Stack>
 
-              <ReportByCategory isFetching={isFetchingReportCategories} />
+              <ReportByCategory isFetching={isLoadingReportCategories} />
             </Stack>
           </Grid>
           <Grid item md={12} lg={6}>
@@ -202,7 +164,7 @@ export default function DashboardPage() {
               </Stack>
               <Stack>
                 <h2>Forecast</h2>
-                <ReportForecast isFetching={isFetchingReportCategories} />
+                <ReportForecast isFetching={isLoadingReportCategories} />
               </Stack>
             </Stack>
           </Grid>

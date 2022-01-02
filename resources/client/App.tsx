@@ -48,7 +48,7 @@ function ListItemLink(props) {
   );
 }
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export default function App() {
   const [user, setUser] = useState<null | User>(null);
