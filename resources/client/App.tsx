@@ -31,6 +31,7 @@ import AuthPage from './components/pages/AuthPage';
 import LoggedInUser from './components/molecules/LoggedInUser';
 import { supabase } from './lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -46,6 +47,8 @@ function ListItemLink(props) {
     </li>
   );
 }
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [user, setUser] = useState<null | User>(null);
@@ -80,60 +83,62 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
-        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
+          <CssBaseline />
 
-        {!user ? (
-          <AuthPage supabase={supabase} />
-        ) : (
-          <Router>
-            <Box sx={{ flexGrow: 1 }}>
-              <AppBar position="fixed">
-                <Toolbar>
-                  <IconButton
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={() => setDrawerOpen(!drawerOpen)}
-                  >
-                    <MenuIcon />
+          {!user ? (
+            <AuthPage supabase={supabase} />
+          ) : (
+            <Router>
+              <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="fixed">
+                  <Toolbar>
+                    <IconButton
+                      size="large"
+                      edge="start"
+                      color="inherit"
+                      aria-label="menu"
+                      sx={{ mr: 2 }}
+                      onClick={() => setDrawerOpen(!drawerOpen)}
+                    >
+                      <MenuIcon />
 
-                    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-                      <List>
-                        <ListItemLink to="/" icon={<InboxIcon />} primary="Dashboard" />
-                        <ListItemLink to="/payments" icon={<PaymentsIcon />} primary="Payments" />
-                        <ListItemLink
-                          to="/categories"
-                          icon={<CategoryIcon />}
-                          primary="Categories"
-                        />
-                      </List>
-                    </Drawer>
-                  </IconButton>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    bookkeeping
-                  </Typography>
-                  <LoggedInUser user={user} onLogout={handleLogout} />
-                </Toolbar>
-              </AppBar>
-            </Box>
+                      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+                        <List>
+                          <ListItemLink to="/" icon={<InboxIcon />} primary="Dashboard" />
+                          <ListItemLink to="/payments" icon={<PaymentsIcon />} primary="Payments" />
+                          <ListItemLink
+                            to="/categories"
+                            icon={<CategoryIcon />}
+                            primary="Categories"
+                          />
+                        </List>
+                      </Drawer>
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                      bookkeeping
+                    </Typography>
+                    <LoggedInUser user={user} onLogout={handleLogout} />
+                  </Toolbar>
+                </AppBar>
+              </Box>
 
-            <Container maxWidth={false}>
-              <Switch>
-                <Route path="/payments">
-                  <PaymentsPage />
-                </Route>
-                <Route path="/categories">
-                  <CategoriesPage />
-                </Route>
-                <Route path="/">
-                  <DashboardPage />
-                </Route>
-              </Switch>
-            </Container>
-          </Router>
-        )}
+              <Container maxWidth={false}>
+                <Switch>
+                  <Route path="/payments">
+                    <PaymentsPage />
+                  </Route>
+                  <Route path="/categories">
+                    <CategoriesPage />
+                  </Route>
+                  <Route path="/">
+                    <DashboardPage />
+                  </Route>
+                </Switch>
+              </Container>
+            </Router>
+          )}
+        </QueryClientProvider>
       </LocalizationProvider>
     </ThemeProvider>
   );
