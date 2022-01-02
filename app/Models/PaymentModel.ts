@@ -21,7 +21,7 @@ export default class PaymentModel extends BaseModel {
   @column({ columnName: 'categoryId', serializeAs: 'categoryId' })
   public categoryId: string;
 
-  @belongsTo(() => CategoryModel)
+  @belongsTo(() => CategoryModel, { foreignKey: 'categoryId' })
   public category: BelongsTo<typeof CategoryModel>;
 
   @column({ columnName: 'incomingPaymentId', serializeAs: 'incomingPaymentId' })

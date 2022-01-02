@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useQuery } from 'react-query';
 import { AppliedPayment } from 'resources/client/interfaces/Payment';
 import { useFetch } from '../../Utils';
 import IsFetching from '../atoms/IsFetching';
@@ -12,22 +13,17 @@ const loadPayments = () => {
 };
 
 export default function PaymentsPage() {
-  const [isFetching, setIsFetching] = useState<boolean>(true);
-  const [payments, setPayments] = useState<AppliedPayment[]>([]);
-
-  useEffect(() => {
-    setIsFetching(true);
-    loadPayments().then((data) => {
-      setPayments(data);
-      setIsFetching(false);
-    });
-  }, []);
+  const {
+    isLoading,
+    error,
+    data: payments,
+  } = useQuery<AppliedPayment[], Error>('applied-payments', loadPayments);
 
   return (
     <PageRoot>
       <h1>Payments</h1>
-      <IsFetching isFetching={isFetching}>
-        <PaymentsList isFetching={isFetching} payments={payments} />
+      <IsFetching isFetching={isLoading} error={error}>
+        <PaymentsList payments={payments!!} />
       </IsFetching>
     </PageRoot>
   );

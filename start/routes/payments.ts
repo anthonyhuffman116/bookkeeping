@@ -6,7 +6,9 @@ Route.get('payments', async () => {
   return await PaymentModel.query()
     .orderBy('bookingDate', 'desc')
     .preload('category')
-    .preload('transaction');
+    .preload('transaction')
+    .orderBy('bookingDate', 'desc')
+    .limit(50);
 });
 
 Route.post('payments', async ({ request, response }) => {
