@@ -1,26 +1,43 @@
 import CategoryBudget from './interfaces/CategoryBudget';
 
-function calculateRemainingEarnings(expected: number, actual: number): number {
-  if (actual > 0) {
-    return expected - actual;
+function earnings(expected: number, actual: number): number {
+  if (actual > expected) {
+    return 0;
   } else {
-    return expected + actual;
+    return expected - actual;
   }
 }
 
-export function calculateRemaining(expected: number, actual: number): null | number {
-  if (expected == actual) {
+function moneyBack(expected: number, actual: number): number {
+  if (actual + expected > 0) {
     return 0;
   }
-  if (expected > 0) {
-    // earnings
-    return calculateRemainingEarnings(expected, actual);
-  } else if (actual < expected) {
+
+  return expected + actual;
+}
+
+function spendings(expected: number, actual: number): null | number {
+  if (actual < expected) {
     // spendings exceeded
     return null;
+  } else if (actual > 0) {
+    return moneyBack(expected, actual);
   }
 
   return expected - actual;
+}
+
+export function calculateRemaining(expected: number, actual: number): null | number {
+  if (expected == 0 || expected == actual) {
+    return 0;
+  }
+
+  if (expected > 0) {
+    // earnings
+    return earnings(expected, actual);
+  } else {
+    return spendings(expected, actual);
+  }
 }
 
 export function calculateBudget(categories: CategoryBudget[]): CategoryBudget[] {
@@ -32,7 +49,7 @@ export function calculateBudget(categories: CategoryBudget[]): CategoryBudget[] 
     let percentage = 0;
 
     if (expected != 0) {
-      percentage = Math.ceil((100 / Math.abs(expected)) * Math.abs(actual));
+      percentage = Math.floor((100 / Math.abs(expected)) * Math.abs(actual));
     }
 
     return { ...category, remaining, percentage };
