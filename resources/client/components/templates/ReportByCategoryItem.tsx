@@ -13,7 +13,7 @@ type ReportByCategoryItemProps = {
 export default function ReportByCategoryItem(props: ReportByCategoryItemProps) {
   let contents: any = null;
 
-  if (props.item.expectedAmount == props.item.amount) {
+  if (props.item.remaining == 0) {
     contents = <CheckIcon />;
   } else if (props.item.remaining == null) {
     contents = (
