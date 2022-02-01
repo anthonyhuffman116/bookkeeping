@@ -1,5 +1,5 @@
 import { Button, Grid, Stack } from '@mui/material';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import IncomingPaymentsList from '../templates/IncomingPaymentsList';
 import {
   beginOfMonth,
@@ -81,22 +81,14 @@ export default function DashboardPage() {
   let balances: Balance[] | undefined = [];
   let isFetchingBalances = false;
 
-  if (accountForBalances) {
-    ({ data: balances, isLoading: isFetchingBalances } = useQuery<Balance[], Error>(
-      ['balances', accountForBalances, balancesGraphStartDate],
-      () => loadBalances(accountForBalances?.iban ?? '', balancesGraphStartDate, new Date())
-    ));
-  }
+  ({ data: balances, isLoading: isFetchingBalances } = useQuery<Balance[], Error>(
+    ['balances', accountForBalances, balancesGraphStartDate],
+    () => loadBalances(accountForBalances?.iban ?? '', balancesGraphStartDate, new Date())
+  ));
 
   const refreshReportCategories = () => {
     queryClient.invalidateQueries('report-categories');
   };
-
-  useEffect(() => {
-    if (!accounts) return;
-
-    !accountForBalances && setAccountForBalances(accounts[0]);
-  }, [accounts]);
 
   const handleCategoryCreated = () => {
     queryClient.invalidateQueries('categories');
